@@ -1,1 +1,1 @@
-Gamemode=Halloween
+Gamemode=Winter
