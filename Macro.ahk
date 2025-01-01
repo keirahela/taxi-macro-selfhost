@@ -455,10 +455,11 @@ F6:: {
         captcha := RegExReplace(captcha, "[/.\-_,]")
 
         ; Send each character
-        for char in StrSplit(captcha) {
-            Send(char)
-            Sleep(Random(25, 75))  ; Optional delay between each keypress
-        }
+        Send(captcha)
+        ;for char in StrSplit(captcha) {
+        ;    Send(char)
+        ;    Sleep(Random(25, 75))  ; Optional delay between each keypress
+        ;}
     } else {
         AddToLog("NO CAPTCHA FOUND.")
     }
@@ -486,10 +487,11 @@ AntiCaptcha() {
         captcha := RegExReplace(captcha, "[/.\-_,]")
 
         ; Send each character
-        for char in StrSplit(captcha) {
-            Send(char)
-            Sleep(Random(25, 75))  ; Optional delay between each keypress
-        }
+        Send(captcha)
+        ;for char in StrSplit(captcha) {
+        ;    Send(char)
+        ;    Sleep(Random(25, 75))  ; Optional delay between each keypress
+        ;}
     } else {
         AddToLog("NO CAPTCHA FOUND.")
     }

@@ -34,8 +34,39 @@ CloseAppButton.OnEvent("Click", (*) => ExitApp())
 GuideBttn := MainGui.Add("Button", "x830 y632 w105 cffffff +BackgroundTrans +Center", "How to use?")
 GuideBttn.OnEvent("Click", (*) => OpenGuide())
 
-WebhookBtn := MainGui.Add("Button", "x965 y632 w105 cffffff +BackgroundTrans +Center", "Webhook")
-WebhookBtn.OnEvent('Click', (*) => OpenWebhooks())
+#Requires AutoHotkey v2.0
+#MaxThreadsPerHotkey 2
+
+
+; Create the initial GUI
+MainSettings := Gui("+AlwaysOnTop")
+MainSettings.SetFont("s8 bold", "Segoe UI")
+
+; Set GUI properties
+MainSettings.BackColor := "0c000a"
+MainSettings.MarginX := 20
+MainSettings.MarginY := 20
+MainSettings.OnEvent("Close", (*) => MainSettings.Hide())
+MainSettings.Title := "Main Settings UI"
+
+MainSettings.Add("Text", "x10 y20 w340 h90 +Center cffffff", "Settings")
+
+; Add Launch Button
+Webhookbttn := MainSettings.Add("Button", "x110 y45 w150", "Webhook Settings")
+Webhookbttn.OnEvent("Click", (*) => OpenWebhooks())
+
+SendChatBttn := MainSettings.Add("Button", "x110 y95 w150", "Send Chat")
+SendChatBttn.OnEvent("Click", (*) => OpenSendChat())
+
+
+; Show the main settings GUI
+; Show the initial GUI
+OpenSettings() {
+    MainSettings.Show("AutoSize Center")
+}
+
+WebhookBtn := MainGui.Add("Button", "x965 y632 w105 cffffff +BackgroundTrans +Center", "Settings")
+WebhookBtn.OnEvent('Click', (*) => OpenSettings())
 
 MainGUI.Add("Picture", "x820 y-20 w90 h90 +BackgroundTrans cffffff", TaxiImage)
 
@@ -56,11 +87,6 @@ placement3 := MainGUI.Add("DropDownList", "x1020 y140 w40 cffffff Choose3", [1, 
 placement4 := MainGUI.Add("DropDownList", "x1020 y170 w40 cffffff Choose3", [1, 2, 3, 4, 5])
 placement5 := MainGUI.Add("DropDownList", "x1020 y200 w40 cffffff Choose3", [1, 2, 3, 4, 5])
 placement6 := MainGUI.Add("DropDownList", "x1020 y230 w40 cffffff Choose3", [1, 2, 3, 4, 5])
-
-
-SendChatButton := MainGUI.Add("Button", "x710 y633 cffffff Choose1 +Center", "Send Chat")
-
-SendChatButton.OnEvent("Click", (*) => OpenSendChat())
 
 MainGUI.Add("Text", "x940 y80 h60 cffffff +BackgroundTrans", "Placements: ")
 MainGUI.Add("Text", "x940 y110 h60 cffffff +BackgroundTrans", "Placements: ")
