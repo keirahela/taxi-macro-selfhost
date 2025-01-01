@@ -41,8 +41,8 @@ This macro is specifically designed for the **Winter Event** and the **Halloween
    - Customize settings like keybinds, and unit placement count.
 3. Start the macro:
    - Press the assigned hotkey (`F1` by default) to resize your roblox to the supported size (IMPORTANT).
-   - Use `F2` to start the macro.
-   - Use `F3` to stop the macro.
+   - Use the assigned hotkey (`F2` by default) to start the macro.
+   - Use the assigned hotkey (`F3` by default) to stop the macro.
 
 ---
 
