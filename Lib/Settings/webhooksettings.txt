@@ -1,2 +1,2 @@
-WebhookURL=asd23
+WebhookURL=https://discord.com/api/webhooks/1321789961384624208/UG0O7BMCJtvjtdwkIH4UjXq0D5fpOtGvBE4x7EMJd7cAV5r_L9FA-sa-6JFEkDHN2_h9
 WebhookEnabled=1

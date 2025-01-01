@@ -14,15 +14,3 @@ MainSettings.OnEvent("Close", (*) => MainSettings.Hide())
 MainSettings.Title := "Main Settings UI"
 
 MainSettings.Add("GroupBox", "x10 y20 w340 h110 +Center c5de0f1", "Optional Settings")
-
-
-; Show the main settings GUI
-; Show the initial GUI
-OpenSettings() {
-    MainSettings.Show("w360 h165")
-}
-
-
-
-
-

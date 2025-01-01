@@ -22,6 +22,18 @@ WebhookGUI.MarginY := 20
 WebhookGUI.OnEvent("Close", (*) => WebhookGUI.Hide())
 WebhookGUI.Title := "Webhooks"
 
+SetWebhook(*) {
+    try {
+        if (WebhookURL.Value != "") {
+            Webhook := WebHookBuilder(WebhookURL.Value)
+        }
+    } catch {
+        MsgBox("Your webhook URL is not valid.", "Webhook", 4096 + 0)
+    }
+}
+
+WebhookGUI.OnEvent("Close", SetWebhook)
+
 Cancel() {
     WebhookGUI.Hide()
 }
