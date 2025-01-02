@@ -48,7 +48,6 @@ SetupMacro() {
 
 }
 
-
 InitializeMacro() {
     if ControlGetVisible(keybindsGui) {
         return
@@ -70,7 +69,6 @@ InitializeMacro() {
     }
 
     if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
-        SetDefaultKeyboard(0x0409)
         GoToRaids()
     }
     else {
