@@ -28,6 +28,8 @@ AutoAbility := "|<>*83$21.zzzzzzzwD4S0kXl28wS03Xk0QSH7nWMy0n7sCQzzzzU"
 ClaimText := "|<>*127$71.00000000000000A7s01y000007zTs07w00000Tzlk0AQ00003k7VU0MM0000D03300kk0000Q0667zXzsw01k0AAzzzzzy031ysTrjTSyS0C7zky0AA0EQ0QCTVs0MM00Q0ss73U0kk00M1lkC711VVUUk3VnwC73333VU73zsQS666737y3tksQAAAC7zy01Uk0MMMQDzy030k0kkksTzy061U1VVVkzzz0y3kX77XXzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
 LoadingScreen := "|<>*98$87.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwTzzzzzzzzzzzzX3zszzzzzszXzzsMTz7zzzzz7wDzz3XzszzzzzszVzzsTzz7zzzzz7wDkz3bwMz3szbszXs1sQS07U73sT7wS07XXU0w0QT7s03UkQQMA7b3Vkz00QD3XX3kzwCCDs03XwQQMz7s1llz7wQTXXX7sw0C4TszXXwQQMz73VsXz7wQD3XX3kswD0TszXk0wQQ0731w7z7wT0DXXU0s0DUzszXw3wQT17UFyDzzzzzzzzzzzzzlzzzzzzzzzzzzzgTw"
 
+global cardPickerEnabled := 1
+
 SetupMacro() {
     if ControlGetVisible(keybindsGui) {
         return
@@ -222,9 +224,11 @@ TryPlacingUnits() {
                 {
                     BetterClick(373, 237)
                 }
-                if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
-                    cardSelector()
-                    AddToLog("Succesfully picked card")
+                if (cardPickerEnabled = 1) {
+                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                        cardSelector()
+                        AddToLog("Succesfully picked card")
+                    }
                 }
                 BetterClick(348, 391) ; next
                 BetterClick(565, 563) ; move mouse
@@ -279,9 +283,11 @@ UpgradeUnits() {
             {
                 BetterClick(373, 237)
             }
-            if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
-                cardSelector()
-                AddToLog("Succesfully picked card")
+            if (cardPickerEnabled = 1) {
+                if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
+                    cardSelector()
+                    AddToLog("Succesfully picked card")
+                }
             }
             BetterClick(348, 391) ; next
             BetterClick(565, 563) ; move mouse
@@ -291,9 +297,11 @@ UpgradeUnits() {
         ; If all units are maxed, still check for stopping condition
         if successfulCoordinates.Length = 0 {
             Reconnect()
-            if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
-                cardSelector()
-                AddToLog("Succesfully picked card")
+            if (cardPickerEnabled = 1) {
+                if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
+                    cardSelector()
+                    AddToLog("Succesfully picked card")
+                }
             }
             BetterClick(348, 391) ; next
             if ShouldStopUpgrading() {

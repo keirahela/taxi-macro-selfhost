@@ -72,6 +72,14 @@ OpenSettings() {
 WebhookBtn := MainGui.Add("Button", "x965 y632 w105 cffffff +BackgroundTrans +Center", "Settings")
 WebhookBtn.OnEvent('Click', (*) => OpenSettings())
 
+CardPicker := MainGUI.Add("Checkbox", "x700 y640 w105 cffffff Checked", "Card picker")
+
+changeCardPicker() {
+    global cardPickerEnabled := CardPicker.Value
+}
+
+CardPicker.OnEvent('Click', (*) => changeCardPicker())
+
 MainGUI.Add("Picture", "x820 y-20 w90 h90 +BackgroundTrans cffffff", TaxiImage)
 
 MainGUI.AddProgress("c0x7e4141 x8 y27 h602 w800", 100) ; box behind roblox, credits to yuh for this idea
@@ -108,7 +116,6 @@ SaveConfigBttn.OnEvent("Click", (*) => SaveConfig())
 
 MainGUI.Add("GroupBox", "x830 y320 w238 h210 cfffd90 ", "Activity Log ")
 ActivityLog := MainGUI.Add("Text", "x830 y340 w238 h300 r11 cffffff +BackgroundTrans +Center", "Macro Launched")
-
 
 MainGUI.Add("GroupBox", "x830 y540 w238 h80 cfffd90 ", "Keybinds")
 KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans +Center", "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro")
