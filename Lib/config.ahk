@@ -1,6 +1,7 @@
 #Include %A_ScriptDir%\Lib\gui.ahk
 #Include %A_ScriptDir%\Lib\configgui.ahk
 #Include %A_ScriptDir%\Macro.ahk
+#Include %A_ScriptDir%\Lib\keybinds.ahk
 
 SaveConfig() {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
@@ -223,10 +224,88 @@ LoadWebhookSettings(isGlobal) {
     File.Close()
     try {
         if (WebhookURL.Value != "") {
-            Webhook := WebHookBuilder(WebhookURL.Value)
+            global Webhook := WebHookBuilder(WebhookURL.Value)
+            AddToLog("Succesfully loaded webhook URL")
         }
     } catch {
         MsgBox("Your webhook URL is not valid.", "Webhook", 4096 + 0)
     }
     AddToLog("Webhook settings loaded successfully.")
+}
+
+SaveHotkeys(*) {
+    global hotkey1, hotkey2, hotkey3, keybindsGui
+
+    if (hotkey1.Value == "" or hotkey2.Value == "" or hotkey3.Value == "") {
+        AddToLog("One of the keybinds is empty. Please change it.")
+        return
+    }
+
+    if (hotkey1.Value == hotkey2.Value || hotkey1.Value == hotkey3.Value || hotkey2.Value == hotkey3.Value) {
+        AddToLog("Duplicate keybinds detected. Please assign unique keys to each function.")
+        return
+    }
+
+    File := FileOpen("C:\keybinds.txt", "w")
+    if !File {
+        AddToLog("Failed to save the keybind settings.")
+        return
+    }
+    ; Write the chat settings to the file
+    File.WriteLine("Hotkey1=" hotkey1.Value)
+    File.WriteLine("Hotkey2=" hotkey2.Value)
+    File.WriteLine("Hotkey3=" hotkey3.Value)
+    File.Close()
+    AddToLog("Keybind settings saved successfully.")
+    keybindsGui.Hide()
+
+    Reload()
+}
+
+LoadHotkeys() {
+    global hotkey1, hotkey2, hotkey3, keybindsGui
+
+    if !FileExist("C:\keybinds.txt") {
+        AddToLog("No keybind settings file found. Default settings will be used.")
+        Hotkey("F1", (*) => SetupMacro())
+        Hotkey("F2", (*) => InitializeMacro())
+        Hotkey("F3", (*) => StopMacro())
+
+        KeyBinds.Text := "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro"
+        return
+    }
+
+    ; Open file for reading
+    File := FileOpen("C:\keybinds.txt", "r", "UTF-8")
+    if !File {
+        AddToLog("Failed to load the keybind settings.")
+        return
+    }
+
+    ; Read and apply the chat settings
+    while !File.AtEOF {
+        line := File.ReadLine()
+        if RegExMatch(line, "Hotkey1=(.+)", &match) {
+            hotkey1.Value := match.1 ; Set the chat message
+        }
+        if RegExMatch(line, "Hotkey2=(.+)", &match) {
+            hotkey2.Value := match.1 ; Set the checkbox value
+        }
+        if RegExMatch(line, "Hotkey3=(.+)", &match) {
+            hotkey3.Value := match.1 ; Set the checkbox value
+        }
+    }
+
+    hotkeyKeybind1 := hotkey1.Value or "F1"
+    hotkeyKeybind2 := hotkey2.Value or "F2"
+    hotkeyKeybind3 := hotkey3.Value or "F3"
+
+    Hotkey(hotkeyKeybind1, (*) => SetupMacro())
+    Hotkey(hotkeyKeybind2, (*) => InitializeMacro())
+    Hotkey(hotkeyKeybind3, (*) => StopMacro())
+
+    KeyBinds.Text := hotkeyKeybind1 " - Fix Roblox Position`n" . hotkeyKeybind2 " - Start Macro`n" . hotkeyKeybind3 " - Stop Macro"
+
+    File.Close()
+    AddToLog("Keybind settings loaded successfully.")
 }

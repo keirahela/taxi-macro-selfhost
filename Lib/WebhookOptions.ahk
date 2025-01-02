@@ -40,11 +40,26 @@ sendWebhook() {
     myEmbed.setImage(attachment)
     myEmbed.setFooter({ text: "Taxi Webhooks" })
 
+    try {
+        if (WebhookURL.Value != "") {
+            global Webhook := WebHookBuilder(WebhookURL.Value)
+        }
+    } catch {
+        MsgBox("Your webhook URL is not valid.", "Webhook", 4096 + 0)
+        return
+    }
+
     ; Send the webhook
-    webhook.send({
-        embeds: [myEmbed],
-        files: [attachment]
-    })
+    try {
+        Webhook.send({
+            embeds: [myEmbed],
+            files: [attachment]
+        })
+
+        AddToLog("Sent webhook successfully")
+    } catch {
+        AddToLog("Failed to send webhook")
+    }
 
     ; Clean up resources
     Gdip_DisposeImage(pBitmap)

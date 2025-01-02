@@ -8,6 +8,7 @@
 #Include %A_ScriptDir%\Lib\imageForCS.ahk
 #Include %A_ScriptDir%\Lib\OCR-main\Lib\OCR.ahk
 #Include %A_ScriptDir%\Lib\WebhookOptions.ahk
+#Include %A_ScriptDir%\Lib\keybinds.ahk
 
 global MacroStartTime := A_TickCount
 
@@ -16,6 +17,7 @@ RobloxWindow := "ahk_exe RobloxPlayerBeta.exe"
 UnitExistence := "|<>*91$66.btzzzzzzyDzXlzzzzzzyDzXlzzzzzzyDzXlzzzyzzyDbXlUS0UM3UC1XlUA0UE30A1XlW4EXl34AMXlX0sbXXC80XVX4MbXX6A1U3UA0bk30ARk7UC0bk3UA1sDUz8bw3kC1zzbyszzzzzzzzbw1zzzzzzzzby3zzzzzzzzzzjzzzzzzU"
 MaxUpgrade := "|<>*134$53.0000000007U3k00000TUDk00001XUsk000033XVU0000636300800A3M6TzwS0M3UDrjRa0k70S0AS61U40s0EMAD001U0k0Ty41331k1zwA6673k7zsQAAS7UTzkwsMQC0TzVzkk0M0Tz3zVk0kETy7z3k1VkzwTz7kX7nzzzzzzzzzzzzzzzzzzw"
 MaxUpgrade2 := "|<>*146$47.D07U0001z0Tk000371lU00067z3zzzzw7w7zzzzs7kDzzzzk7UTzSzzUC0w0MwD081k0UkS00301U1w82663U3sMAAC7UDkssMwD0zVvkksQ0z3zVU0k0y7z3U1UUwDy7U33VszyDX6Dbzzzzzzzzzzzzzzzy"
+MaxUpgrade3 := "|<>*91$49.Dk7s00004M3600006633000031X1U0001UP0nzr3kkD0PzynAM3UD06D3A0U70331a00301U1X20VVUs1lVUklsS1kkssMwD0kMSQAC70AA/u603036413U1UUn20Vs0ksNX0My4NqMTUDnzzlwU"
 VoteStart := "|<>*95$38.ryzzzzlz7zlzwDVzwTzXszz7zsSC30Q7770E40klU410C8sklVXUACAM0w7X360T1s1kEbsz0Q40zDsTVUM"
 LobbyText := "|<>*134$56.0000000000k00U10000T00y1w000Cs0RkvU003606AAM000lU1X36000AMzMwlswS36zyDwTzjslw7WD4ST6AS0M1k33lX7060A0MMPlkkVX366DwQS8sFkk3z772C4QC1zlkkV327UTw40M0k1wDz1UC0Q0z3zsQ7WD4TkzzzzzzzzwTzzzzzzzy7zzzzzzzzXzzzzzzzzszs"
 AreasText := "|<>*108$36.zs007zyzztzzwTzzzzwTzTzzsA4613tA421/k4M0F3k4M4FXXUQ603bmy713zzzzzzU"
@@ -26,15 +28,10 @@ AutoAbility := "|<>*83$21.zzzzzzzwD4S0kXl28wS03Xk0QSH7nWMy0n7sCQzzzzU"
 ClaimText := "|<>*127$71.00000000000000A7s01y000007zTs07w00000Tzlk0AQ00003k7VU0MM0000D03300kk0000Q0667zXzsw01k0AAzzzzzy031ysTrjTSyS0C7zky0AA0EQ0QCTVs0MM00Q0ss73U0kk00M1lkC711VVUUk3VnwC73333VU73zsQS666737y3tksQAAAC7zy01Uk0MMMQDzy030k0kkksTzy061U1VVVkzzz0y3kX77XXzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
 LoadingScreen := "|<>*98$87.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwTzzzzzzzzzzzzX3zszzzzzszXzzsMTz7zzzzz7wDzz3XzszzzzzszVzzsTzz7zzzzz7wDkz3bwMz3szbszXs1sQS07U73sT7wS07XXU0w0QT7s03UkQQMA7b3Vkz00QD3XX3kzwCCDs03XwQQMz7s1llz7wQTXXX7sw0C4TszXXwQQMz73VsXz7wQD3XX3kswD0TszXk0wQQ0731w7z7wT0DXXU0s0DUzszXw3wQT17UFyDzzzzzzzzzzzzzlzzzzzzzzzzzzzgTw"
 
-try {
-    if (WebhookURL.Value != "") {
-        Webhook := WebHookBuilder(WebhookURL.Value)
+SetupMacro() {
+    if ControlGetVisible(keybindsGui) {
+        return
     }
-} catch {
-    MsgBox("Your webhook URL is not valid.", "Webhook", 4096 + 0)
-}
-
-F1:: {
     if WinExist(RobloxWindow) {
         WinActivate(RobloxWindow)
         Sleep 50
@@ -49,9 +46,11 @@ F1:: {
 
 }
 
-F2:: InitializeMacro()
 
 InitializeMacro() {
+    if ControlGetVisible(keybindsGui) {
+        return
+    }
     global MacroStartTime := A_TickCount
 
     if WinExist("Taxi Auto-Challenge") {
@@ -69,6 +68,7 @@ InitializeMacro() {
     }
 
     if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
+        SetDefaultKeyboard(0x0409)
         GoToRaids()
     }
     else {
@@ -76,6 +76,16 @@ InitializeMacro() {
         return
     }
 
+}
+
+SetDefaultKeyboard(localeID) {
+    static SPI_SETDEFAULTINPUTLANG := 0x005A, SPIF_SENDWININICHANGE := 2
+    Lan := DllCall("LoadKeyboardLayout", "Str", Format("{:08x}", LocaleID), "Int", 0)
+    binaryLocaleID := Buffer(4, 0)
+    NumPut("UInt", LocaleID, binaryLocaleID)
+    DllCall("SystemParametersInfo", "UInt", SPI_SETDEFAULTINPUTLANG, "UInt", 0, "Ptr", binaryLocaleID, "UInt", SPIF_SENDWININICHANGE)
+    for hwnd in WinGetList()
+        PostMessage 0x50, 0, Lan, , hwnd
 }
 
 BetterClick(x, y, LR := "Left") { ; credits to yuh for this, lowk a life saver
@@ -130,7 +140,10 @@ GoToRaids() {
 
 }
 
-F3:: {
+StopMacro() {
+    if ControlGetVisible(keybindsGui) {
+        return
+    }
     Reload()
 }
 ; Define the rectangle coordinates
@@ -163,6 +176,10 @@ IsPlacementSuccessful() {
         return true
     }
     return false
+}
+
+Numpad5:: {
+    SendWebhook()
 }
 
 #Requires AutoHotkey v2.0
@@ -301,7 +318,7 @@ UpgradeUnit(x, y) {
 
 IsMaxUpgrade() {
     Sleep 500
-    if (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade) or (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade2)))
+    if (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade) or (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade2)) or (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade3)))
     {
         return true
     }
@@ -310,7 +327,9 @@ IsMaxUpgrade() {
 ShouldStopUpgrading(sleepamount := 300) {
     Sleep sleepamount
     if CheckForLobbyButton() {
-        SendWebhook()
+        if (WebhookCheckbox.Value = 1) {
+            SendWebhook()
+        }
         BetterClick(376, 117)
         return true
     }
@@ -332,7 +351,10 @@ FindAndClickColor(targetColor := 0x006783, searchArea := [0, 0, A_ScreenWidth, A
 }
 
 
-F4:: {
+OnSpawn() {
+    if ControlGetVisible(keybindsGui) {
+        return
+    }
     OnSpawnSetup()
 }
 
@@ -438,7 +460,10 @@ TPtoSpawn() {
 
 }
 
-F6:: {
+DebugOCR() {
+    if ControlGetVisible(keybindsGui) {
+        return
+    }
     ocrResult := OCR.FromRect(266, 309, 603 - 266, 352 - 309, , 2)
 
     if ocrResult {
@@ -463,8 +488,8 @@ F6:: {
     } else {
         AddToLog("NO CAPTCHA FOUND.")
     }
-
 }
+
 AntiCaptcha() {
 
     ; Perform OCR on the defined region directly

@@ -3,6 +3,7 @@
 #Include %A_ScriptDir%\Lib\webhooksgui.ahk
 #Include %A_ScriptDir%\Lib\config.ahk
 #Include %A_ScriptDir%\Lib\mainsettingsui.ahk
+#Include %A_ScriptDir%\Lib\keybinds.ahk
 
 GemsEarned := 0
 ShibuyaFood := 0
@@ -49,7 +50,7 @@ MainSettings.MarginY := 20
 MainSettings.OnEvent("Close", (*) => MainSettings.Hide())
 MainSettings.Title := "Main Settings UI"
 
-MainSettings.Add("Text", "x10 y20 w340 h90 +Center cffffff", "Settings")
+MainSettings.Add("Text", "x10 y20 w340 h130 +Center cffffff", "Settings")
 
 ; Add Launch Button
 Webhookbttn := MainSettings.Add("Button", "x110 y45 w150", "Webhook Settings")
@@ -57,6 +58,9 @@ Webhookbttn.OnEvent("Click", (*) => OpenWebhooks())
 
 SendChatBttn := MainSettings.Add("Button", "x110 y95 w150", "Send Chat")
 SendChatBttn.OnEvent("Click", (*) => OpenSendChat())
+
+SendChatBttn := MainSettings.Add("Button", "x110 y140 w150", "Keybinds")
+SendChatBttn.OnEvent("Click", (*) => OpenKeybinds())
 
 
 ; Show the main settings GUI
@@ -153,3 +157,4 @@ OpenSendChat() {
 
 LoadConfigFromFile("C:\global.txt")
 LoadWebhookSettings(true)
+LoadHotkeys()

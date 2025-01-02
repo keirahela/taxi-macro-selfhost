@@ -25,7 +25,8 @@ WebhookGUI.Title := "Webhooks"
 SetWebhook(*) {
     try {
         if (WebhookURL.Value != "") {
-            Webhook := WebHookBuilder(WebhookURL.Value)
+            global Webhook := WebHookBuilder(WebhookURL.Value)
+            AddToLog("Succesfully changed webhook URL")
         }
     } catch {
         MsgBox("Your webhook URL is not valid.", "Webhook", 4096 + 0)
