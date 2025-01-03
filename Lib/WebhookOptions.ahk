@@ -2,14 +2,18 @@
 #Include %A_ScriptDir%\Macro.ahk
 #Include %A_ScriptDir%\Lib\Gdip_All.ahk
 
-sendWebhook() {
-
-    ElapsedTimeMs := A_TickCount - MacroStartTime
+CalculateElapsedTime(StartTime) {
+    ElapsedTimeMs := A_TickCount - StartTime
     ElapsedTimeSec := Floor(ElapsedTimeMs / 1000)
     ElapsedHours := Floor(ElapsedTimeSec / 3600)
     ElapsedMinutes := Floor(Mod(ElapsedTimeSec, 3600) / 60)
     ElapsedSeconds := Mod(ElapsedTimeSec, 60)
-    Runtime := Format("{} hours, {} minutes", ElapsedHours, ElapsedMinutes)
+    Return Format("{} hours, {} minutes", ElapsedHours, ElapsedMinutes)
+}
+
+sendWebhook() {
+    MacroRuntime := CalculateElapsedTime(MacroStartTime)
+    StageRuntime := CalculateElapsedTime(StageStartTime)
 
     pToken := Gdip_Startup()
     if !pToken {
@@ -35,7 +39,7 @@ sendWebhook() {
     attachment := AttachmentBuilder(pCroppedBitmap)
     myEmbed := EmbedBuilder()
     myEmbed.setTitle("Stage Completed")
-    myEmbed.setDescription("[Macro Runtime: " Runtime "]")
+    myEmbed.setDescription("[Macro Runtime: " MacroRuntime "]`n[Stage Runtime: " StageRuntime "]")
     myEmbed.setColor(0x0A5EB0)
     myEmbed.setImage(attachment)
     myEmbed.setFooter({ text: "Taxi Webhooks" })

@@ -4,6 +4,7 @@
 #Include %A_ScriptDir%\Lib\config.ahk
 #Include %A_ScriptDir%\Lib\mainsettingsui.ahk
 #Include %A_ScriptDir%\Lib\keybinds.ahk
+#Include %A_ScriptDir%\Lib\PriorityPicker.ahk
 
 GemsEarned := 0
 ShibuyaFood := 0
@@ -50,17 +51,20 @@ MainSettings.MarginY := 20
 MainSettings.OnEvent("Close", (*) => MainSettings.Hide())
 MainSettings.Title := "Main Settings UI"
 
-MainSettings.Add("Text", "x10 y20 w340 h130 +Center cffffff", "Settings")
+MainSettings.Add("Text", "x30 y20 w340 h130 +Center cffffff", "Settings")
 
 ; Add Launch Button
-Webhookbttn := MainSettings.Add("Button", "x110 y45 w150", "Webhook Settings")
+Webhookbttn := MainSettings.Add("Button", "x30 y45 w150", "Webhook Settings")
 Webhookbttn.OnEvent("Click", (*) => OpenWebhooks())
 
-SendChatBttn := MainSettings.Add("Button", "x110 y95 w150", "Send Chat")
+SendChatBttn := MainSettings.Add("Button", "x220 y45 w150", "Send Chat")
 SendChatBttn.OnEvent("Click", (*) => OpenSendChat())
 
-SendChatBttn := MainSettings.Add("Button", "x110 y140 w150", "Keybinds")
+SendChatBttn := MainSettings.Add("Button", "x30 y110 w150", "Keybinds")
 SendChatBttn.OnEvent("Click", (*) => OpenKeybinds())
+
+SendChatBttn := MainSettings.Add("Button", "x220 y110 w150", "Card priority order")
+SendChatBttn.OnEvent("Click", (*) => OpenPriorityPicker())
 
 
 ; Show the main settings GUI
@@ -122,7 +126,7 @@ KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans
 
 MainGUI.SetFont("s16 bold", "Segoe UI")
 
-MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter Event Macro v1.1.6 - Taxi Macro")
+MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter Event Macro v1.1.6-3 - Taxi Macro")
 
 MainGUI.Show("x27 y15 w1100 h665")
 
@@ -165,3 +169,4 @@ OpenSendChat() {
 LoadConfigFromFile("C:\global.txt")
 LoadWebhookSettings(true)
 LoadHotkeys()
+LoadCardPrioritySettings(true)

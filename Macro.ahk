@@ -9,8 +9,10 @@
 #Include %A_ScriptDir%\Lib\OCR-main\Lib\OCR.ahk
 #Include %A_ScriptDir%\Lib\WebhookOptions.ahk
 #Include %A_ScriptDir%\Lib\keybinds.ahk
+#Include %A_ScriptDir%\Lib\IsProcessElevated.ahk
 
 global MacroStartTime := A_TickCount
+global StageStartTime := A_TickCount
 
 SendMode "Event"
 RobloxWindow := "ahk_exe RobloxPlayerBeta.exe"
@@ -27,6 +29,7 @@ Matchmaking := "|<>*93$73.zzzzzzzzzzzzzzlzzzsszzzzk08zzzwATzzzs04Tzzy6Dzzzw03zzz
 AutoAbility := "|<>*83$21.zzzzzzzwD4S0kXl28wS03Xk0QSH7nWMy0n7sCQzzzzU"
 ClaimText := "|<>*127$71.00000000000000A7s01y000007zTs07w00000Tzlk0AQ00003k7VU0MM0000D03300kk0000Q0667zXzsw01k0AAzzzzzy031ysTrjTSyS0C7zky0AA0EQ0QCTVs0MM00Q0ss73U0kk00M1lkC711VVUUk3VnwC73333VU73zsQS666737y3tksQAAAC7zy01Uk0MMMQDzy030k0kkksTzy061U1VVVkzzz0y3kX77XXzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
 LoadingScreen := "|<>*98$87.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwTzzzzzzzzzzzzX3zszzzzzszXzzsMTz7zzzzz7wDzz3XzszzzzzszVzzsTzz7zzzzz7wDkz3bwMz3szbszXs1sQS07U73sT7wS07XXU0w0QT7s03UkQQMA7b3Vkz00QD3XX3kzwCCDs03XwQQMz7s1llz7wQTXXX7sw0C4TszXXwQQMz73VsXz7wQD3XX3kswD0TszXk0wQQ0731w7z7wT0DXXU0s0DUzszXw3wQT17UFyDzzzzzzzzzzzzzlzzzzzzzzzzzzzgTw"
+P := "|<>*88$35.3zzzy0Tzzzy0zzzzy3zzzzw7zzzzsTzzzzszzzzzlzzzzzXzw1zz7zs1zyDzk1zwTzV3zszz73zlzyC7zXzwQTz7zs0zyDzk3zwTzVzzszz7zzlzyDzzXzwTzz7zzzzyDzzzzwTzzzzszzzzzkzzzzzVzzzzy1zzzzw3zzzzk3zzzz00zzzs0000000000004"
 
 global cardPickerEnabled := 1
 
@@ -147,7 +150,8 @@ StopMacro() {
     Reload()
 }
 ; Define the rectangle coordinates
-global startX := 100, startY := 500, endX := 700, endY := 200
+global startX := 100, startY := 500, endX := 700, endY := 350
+global startY2 := 200, endY2 := 350
 global step := 50 ; Step size for grid traversal
 global successfulCoordinates := [] ; Array to store successful placements
 global successThreshold := 3 ; Number of successful placements needed
@@ -169,7 +173,7 @@ PlaceUnit(x, y, slot := 1) {
 
 IsPlacementSuccessful() {
 
-    Sleep 3000
+    Sleep 1000
     if (ok := FindText(&X, &Y, 78, 182, 400, 451, 0, 0, UnitExistence)) {
         AddToLog("placed unit successfully")
         BetterClick(329, 184) ; close upg menu
@@ -177,6 +181,7 @@ IsPlacementSuccessful() {
     }
     return false
 }
+
 
 Numpad5:: {
     SendWebhook()
@@ -192,6 +197,7 @@ TryPlacingUnits() {
 
     x := startX ; Initialize x only once
     y := startY ; Initialize y only once
+    y2 := startY2 ; Initialize y2 only once
 
     ; Iterate through all slots (1 to 6)
     for slotNum in [1, 2, 3, 4, 5, 6] {
@@ -210,13 +216,22 @@ TryPlacingUnits() {
         AddToLog("Starting placements for Slot " slotNum " with " placements " placements.")
 
         placementCount := 0
+        alternatingPlacement := 0
 
         ; Continue placement for the current slot
-        while (placementCount < placements && y >= endY) { ; Rows
+        while (placementCount < placements && y >= endY && y2 <= endY2) { ; Rows
             while (placementCount < placements && x <= endX) { ; Columns
-                if PlaceUnit(x, y, slotNum) {
-                    placementCount++
-                    successfulCoordinates.Push({ x: x, y: y }) ; Track successful placements
+                if (alternatingPlacement == 0) {
+                    if PlaceUnit(x, y2, slotNum) {
+                        placementCount++
+                        successfulCoordinates.Push({ x: x, y: y2 }) ; Track successful placements
+                    }
+                }
+                if (alternatingPlacement == 1) {
+                    if PlaceUnit(x, y, slotNum) {
+                        placementCount++
+                        successfulCoordinates.Push({ x: x, y: y }) ; Track successful placements
+                    }
                 }
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
                 {
@@ -225,7 +240,7 @@ TryPlacingUnits() {
                 if (cardPickerEnabled = 1) {
                     if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
                         cardSelector()
-                        AddToLog("Succesfully picked card")
+                        ;AddToLog("Succesfully picked card")
                     }
                 }
                 BetterClick(348, 391) ; next
@@ -239,7 +254,14 @@ TryPlacingUnits() {
             }
             if x > endX {
                 x := startX ; Reset x for the next row
-                y -= (step + 25) ; Move to the next row
+                if (Mod(alternatingPlacement, 2) == 0) {
+                    y2 += (step + 25) ; Move to the next row, upwards
+                    alternatingPlacement += 1
+                }
+                else {
+                    y -= (step + 25) ; Move to the next row, downwards
+                    alternatingPlacement -= 1
+                }
             }
             Reconnect()
         }
@@ -284,7 +306,7 @@ UpgradeUnits() {
             if (cardPickerEnabled = 1) {
                 if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
                     cardSelector()
-                    AddToLog("Succesfully picked card")
+                    ;AddToLog("Succesfully picked card")
                 }
             }
             BetterClick(348, 391) ; next
@@ -298,7 +320,7 @@ UpgradeUnits() {
             if (cardPickerEnabled = 1) {
                 if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
                     cardSelector()
-                    AddToLog("Succesfully picked card")
+                    ;AddToLog("Succesfully picked card")
                 }
             }
             BetterClick(348, 391) ; next
@@ -387,13 +409,29 @@ LoadedLoop() {
         Sleep 1000
         if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))
         {
+            global StageStartTime := A_TickCount
             AddToLog("Loaded in")
             Sleep 1000
             BetterClick(350, 103) ; click yes
             BetterClick(350, 100) ; click yes
             BetterClick(350, 97) ; click yes
+            Sleep 200
+            BetterClick(590, 15) ; click on P
             break
         }
+        else if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P))
+        {
+            global StageStartTime := A_TickCount
+            AddToLog("Loaded in late")
+            Sleep 1000
+            BetterClick(350, 103) ; click yes
+            BetterClick(350, 100) ; click yes
+            BetterClick(350, 97) ; click yes
+            Sleep 200
+            BetterClick(590, 15) ; click on P
+            break
+        }
+
         Reconnect()
     }
     chat := ChatToSend.Value
@@ -599,6 +637,8 @@ OnSpawnSetup() {
         }
     }
     Sleep 4000
+    BetterClick(590, 15) ; click on P
+    Sleep 1000
     TapToMove(false)
 
 }
@@ -641,8 +681,37 @@ HoldKey(key, duration) {
     KeyWait key ; Wait for "d" to be fully processed
 }
 
-;Added by @raynnpjl
 cardSelector() {
+    AddToLog("Picking card in priority order")
+    if (ok := FindText(&X, &Y, 78, 182, 400, 451, 0, 0, UnitExistence)) {
+        BetterClick(329, 184) ; close upg menu
+        sleep 100
+    }
+
+    BetterClick(59, 572) ; Untarget Mouse
+    sleep 500
+
+    for index, priority in priorityOrder {
+        if (!textCards.Has(priority)) {
+            continue
+        }
+        if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, textCards.Get(priority))) {
+            FindText().Click(cardX, cardY, 0)
+            MouseMove 0, 10, 2, "R"
+            Click 2
+            sleep 1000
+            MouseMove 0, 120, 2, "R"
+            Click 2
+            AddToLog(Format("Picked card: {}", priority))
+            sleep 5000
+            return
+        }
+    }
+    AddToLog("Failed to pick a card")
+}
+
+;Added by @raynnpjl
+cardSelectorBackup() {
     AddToLog("Picking card")
     if (ok := FindText(&X, &Y, 78, 182, 400, 451, 0, 0, UnitExistence)) {
         BetterClick(329, 184) ; close upg menu

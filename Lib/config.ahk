@@ -1,6 +1,7 @@
 #Include %A_ScriptDir%\Lib\gui.ahk
 #Include %A_ScriptDir%\Lib\configgui.ahk
 #Include %A_ScriptDir%\Macro.ahk
+#Include %A_ScriptDir%\Lib\PriorityPicker.ahk
 #Include %A_ScriptDir%\Lib\keybinds.ahk
 
 SaveConfig() {
@@ -52,11 +53,17 @@ SaveConfigToFile(filePath) {
 }
 
 SaveGlobal(*) {
+    if (IsProcessElevated(DllCall("GetCurrentProcessId")) != 1) {
+        AddToLog("Failed to save to global config, make sure macro is running with admin rights.")
+        return
+    }
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
 
     SaveConfigToFile("C:\global.txt")
     SaveWebhookSettings(true)
+    SaveCardPrioritySettings(true)
+    SaveChatSend(true)
     GuiClose()
 }
 
@@ -66,15 +73,23 @@ SaveLocal(*) {
 
     SaveConfigToFile("Lib\Settings\config.txt")
     SaveWebhookSettings(false)
+    SaveCardPrioritySettings(false)
+    SaveChatSend(false)
     GuiClose()
 }
 
 LoadGlobal(*) {
+    if (IsProcessElevated(DllCall("GetCurrentProcessId")) != 1) {
+        AddToLog("Failed to load global config, make sure macro is running with admin rights.")
+        return
+    }
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
 
     LoadConfigFromFile("C:\global.txt")
     LoadWebhookSettings(true)
+    LoadCardPrioritySettings(true)
+    LoadChatSettings(true)
     GuiClose()
 }
 
@@ -84,8 +99,64 @@ LoadLocal(*) {
 
     LoadConfigFromFile("Lib\Settings\config.txt")
     LoadWebhookSettings(false)
+    LoadCardPrioritySettings(false)
+    LoadChatSettings(false)
     GuiClose()
 }
+
+SaveCardPrioritySettings(isGlobal) {
+    global dropDowns
+
+    ; Open file for writing
+    File := FileOpen((isGlobal = true) ? "C:\cardpriority.txt" : "Lib\Settings\cardpriority.txt", "w")
+    if !File {
+        AddToLog("Failed to save the card priority settings.")
+        return
+    }
+
+    for index, dropDown in dropDowns {
+        File.WriteLine(Format("Enabled{}={}", index + 1, dropDown.Value))
+    }
+
+    File.Close()
+    AddToLog("Card priority settings saved successfully.")
+    PriorityCardSelector.Hide()
+
+}
+
+LoadCardPrioritySettings(isGlobal) {
+    global dropDowns
+
+    filePath := (isGlobal = true) ? "C:\cardpriority.txt" : "Lib\Settings\cardpriority.txt"
+
+    if !FileExist(filePath) {
+        AddToLog("No card priority settings file found. Default settings will be used.")
+        return
+    }
+
+    file := FileOpen(filePath, "r", "UTF-8")
+    if !file {
+        AddToLog("Failed to load the card priority settings.")
+        return
+    }
+
+    while !file.AtEOF {
+        line := file.ReadLine()
+
+        if RegExMatch(line, "Enabled(\d)=(\d+)", &match) {
+            slot := match.1
+            value := match.2
+            dropDown := dropDowns[slot - 1]
+            if (dropDown) {
+                dropDown.Value := value
+            }
+        }
+    }
+
+    file.Close()
+    AddToLog("Card priority settings loaded successfully.")
+}
+
 
 LoadConfigFromFile(filePath) {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
@@ -122,16 +193,13 @@ LoadConfigFromFile(filePath) {
         file.Close()
         AddToLog("Configuration loaded successfully.")
     }
-
-
-    LoadChatSettings() ; Load chat settings
 }
 
-SaveChatSend() {
+SaveChatSend(isGlobal) {
     global ChatToSend, ChatStatusBox
 
     ; Open file for writing
-    File := FileOpen("Lib\Settings\chatsettings.txt", "w")
+    File := FileOpen((isGlobal = true) ? "C:\chatsettings.txt" : "Lib\Settings\chatsettings.txt", "w")
     if !File {
         AddToLog("Failed to save the chat settings.")
         return
@@ -145,16 +213,16 @@ SaveChatSend() {
     SendChatGUI.Hide()
 }
 
-LoadChatSettings() {
+LoadChatSettings(isGlobal) {
     global ChatToSend, ChatStatusBox
 
-    if !FileExist("Lib\Settings\chatsettings.txt") {
+    if !FileExist((isGlobal = true) ? "C:\chatsettings.txt" : "Lib\Settings\chatsettings.txt") {
         AddToLog("No chat settings file found. Default settings will be used.")
         return
     }
 
     ; Open file for reading
-    File := FileOpen("Lib\Settings\chatsettings.txt", "r", "UTF-8")
+    File := FileOpen((isGlobal = true) ? "C:\chatsettings.txt" : "Lib\Settings\chatsettings.txt", "r", "UTF-8")
     if !File {
         AddToLog("Failed to load the chat settings.")
         return
