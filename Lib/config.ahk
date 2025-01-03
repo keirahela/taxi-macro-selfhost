@@ -115,7 +115,7 @@ LoadConfigFromFile(filePath) {
 
         KeyBinds.Text := "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro"
         global autoUpdateEnabled := 1
-        AutoUpdate.Value = 1
+        AutoUpdate.Value := 1
     } else {
         ; Open file for reading
         file := FileOpen(filePath, "r", "UTF-8")
