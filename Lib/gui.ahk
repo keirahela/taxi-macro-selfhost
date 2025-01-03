@@ -5,6 +5,7 @@
 #Include %A_ScriptDir%\Lib\mainsettingsui.ahk
 #Include %A_ScriptDir%\Lib\keybinds.ahk
 #Include %A_ScriptDir%\Lib\PriorityPicker.ahk
+#Include %A_ScriptDir%\Lib\UnitUpgradePriority.ahk
 
 GemsEarned := 0
 ShibuyaFood := 0
@@ -51,7 +52,7 @@ MainSettings.MarginY := 20
 MainSettings.OnEvent("Close", (*) => MainSettings.Hide())
 MainSettings.Title := "Main Settings UI"
 
-MainSettings.Add("Text", "x30 y20 w340 h130 +Center cffffff", "Settings")
+MainSettings.Add("Text", "x30 y20 w340 h190 +Center cffffff", "Settings")
 
 ; Add Launch Button
 Webhookbttn := MainSettings.Add("Button", "x30 y45 w150", "Webhook Settings")
@@ -62,6 +63,9 @@ SendChatBttn.OnEvent("Click", (*) => OpenSendChat())
 
 SendChatBttn := MainSettings.Add("Button", "x30 y110 w150", "Keybinds")
 SendChatBttn.OnEvent("Click", (*) => OpenKeybinds())
+
+SendChatBttn := MainSettings.Add("Button", "x30 y170 w150", "Unit upgrade priority order")
+SendChatBttn.OnEvent("Click", (*) => OpenUnitUpgrade())
 
 SendChatBttn := MainSettings.Add("Button", "x220 y110 w150", "Card priority order")
 SendChatBttn.OnEvent("Click", (*) => OpenPriorityPicker())
@@ -83,6 +87,13 @@ changeCardPicker() {
 }
 
 CardPicker.OnEvent('Click', (*) => changeCardPicker())
+
+AutoUpdate := MainGUI.Add("Checkbox", "x450 y640 w150 cffffff Checked", "Auto update")
+AutoUpdate.OnEvent("Click", (*) => ChangedAutoUpdate())
+
+ChangedAutoUpdate() {
+    global autoUpdateEnabled := AutoUpdate.Value
+}
 
 MainGUI.Add("Picture", "x820 y-20 w90 h90 +BackgroundTrans cffffff", TaxiImage)
 
@@ -166,7 +177,4 @@ OpenSendChat() {
     SendChatGUI.Show("w300 h150")
 }
 
-LoadConfigFromFile("C:\global.txt")
-LoadWebhookSettings(true)
-LoadHotkeys()
-LoadCardPrioritySettings(true)
+LoadGlobal()

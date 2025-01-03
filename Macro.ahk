@@ -1,6 +1,7 @@
 ﻿; huge thanks to:
 ; raynnpjl for contributing the card selector
 ; yuh for heavily inspiring  the macro + some functions
+; taxi for the base macro
 
 #Requires AutoHotkey v2.0
 #Include %A_ScriptDir%\Lib\gui.ahk
@@ -10,6 +11,7 @@
 #Include %A_ScriptDir%\Lib\WebhookOptions.ahk
 #Include %A_ScriptDir%\Lib\keybinds.ahk
 #Include %A_ScriptDir%\Lib\IsProcessElevated.ahk
+#Include %A_ScriptDir%\Lib\updates.ahk
 
 global MacroStartTime := A_TickCount
 global StageStartTime := A_TickCount
@@ -31,6 +33,10 @@ ClaimText := "|<>*127$71.00000000000000A7s01y000007zTs07w00000Tzlk0AQ00003k7VU0M
 LoadingScreen := "|<>*98$87.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwTzzzzzzzzzzzzX3zszzzzzszXzzsMTz7zzzzz7wDzz3XzszzzzzszVzzsTzz7zzzzz7wDkz3bwMz3szbszXs1sQS07U73sT7wS07XXU0w0QT7s03UkQQMA7b3Vkz00QD3XX3kzwCCDs03XwQQMz7s1llz7wQTXXX7sw0C4TszXXwQQMz73VsXz7wQD3XX3kswD0TszXk0wQQ0731w7z7wT0DXXU0s0DUzszXw3wQT17UFyDzzzzzzzzzzzzzlzzzzzzzzzzzzzgTw"
 P := "|<>*88$35.3zzzy0Tzzzy0zzzzy3zzzzw7zzzzsTzzzzszzzzzlzzzzzXzw1zz7zs1zyDzk1zwTzV3zszz73zlzyC7zXzwQTz7zs0zyDzk3zwTzVzzszz7zzlzyDzzXzwTzz7zzzzyDzzzzwTzzzzszzzzzkzzzzzVzzzzy1zzzzw3zzzzk3zzzz00zzzs0000000000004"
 P2 := "|<>*102$165.1zzzs000Dzzz0003zzzk000zzzw0zzzzk007zzzy001zzzzU00TzzzsDzzzz001zzzzs00Tzzzy007zzzzXzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzrzzzzy00zzzzzk0Dzzzzw03zzzzzzzzzzk07zw3zy01zzzzzU0Tzzzzzzzzzy00zy07zk0Dzzzzw03zlyDzzzzzzk07zU0Ty01zzzzzU0Ts30Tzzzzzy00zs01zk0Dzzzzw03y001zzz0zzk07y0k7y01zzzzzU0TU007zzvzzy00zU60Tk0Dzzzzw03w000zzzTzzk07w003y01zzzzTU0TU007zzvzzy00z000Dk0Dzzzzw03w000zzzzzzk07s0k1y01zzzzzU0TU007zzzzzy00z060Dk0Dzzzzw03y001zzzzzzk07s0k1y01zzzzzU0Tk00Dzzzzzy00z060Dk0Dzzzzw03z003zzzzzzk07s0k1y01zzzzzU0Tw00zzzzzzy00zU60Tk0Dzzzzw03zk0Dzzzzzzk07w0k3y01zzzzzU0Tz03zzzzzzy00zk60zk0Dzzzzw03zw0zzzzzzzk07z00Dy01zzzzzU0TzkDzzzzzzy00zw03zk0Dzzzzw03zzbzzzzzzzk07zk0zy01zzzzzU0Tzzzzzzzzzy00zzkzzk0Dzzzzw03zzzzzzzzzzk07zzzzy01zzzzzU0Tzzzzvzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzlzzzzs00Dzzzz003zzzzk00zzzzw7zzzy000zzzzk00Dzzzw003zzzz0Dzzz0001zzzs000Tzzy0007zzzUU"
+
+
+CheckForUpdates()
+
 
 global cardPickerEnabled := 1
 
@@ -188,13 +194,10 @@ Numpad5:: {
     SendWebhook()
 }
 
-#Requires AutoHotkey v2.0
-
-#Include %A_ScriptDir%\Lib\Gdip_All.ahk
-
 TryPlacingUnits() {
-    global startX, startY, endX, endY, step, successfulCoordinates
+    global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
     successfulCoordinates := [] ; Reset successfulCoordinates for each run
+    maxedCoordinates := []
 
     x := startX ; Initialize x only once
     y := startY ; Initialize y only once
@@ -225,13 +228,13 @@ TryPlacingUnits() {
                 if (alternatingPlacement == 0) {
                     if PlaceUnit(x, y2, slotNum) {
                         placementCount++
-                        successfulCoordinates.Push({ x: x, y: y2 }) ; Track successful placements
+                        successfulCoordinates.Push({ x: x, y: y2, slot: "slot_" slotNum }) ; Track successful placements
                     }
                 }
                 if (alternatingPlacement == 1) {
                     if PlaceUnit(x, y, slotNum) {
                         placementCount++
-                        successfulCoordinates.Push({ x: x, y: y }) ; Track successful placements
+                        successfulCoordinates.Push({ x: x, y: y, slot: "slot_" slotNum }) ; Track successful placements
                     }
                 }
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
@@ -276,9 +279,106 @@ TryPlacingUnits() {
     AddToLog("All slot placements and upgrades completed.")
 }
 
+IsMaxed(coord) {
+    global maxedCoordinates
+    for _, maxedCoord in maxedCoordinates {
+        if (maxedCoord.x = coord.x && maxedCoord.y = coord.y) {
+            return true
+        }
+    }
+    return false
+}
 
 UpgradeUnits() {
+    global successfulCoordinates, maxedCoordinates, unitUpgradePrioritydropDowns
+    AddToLog("Beginning prioritized unit upgrades.")
+
+    priorityMapping := []
+    for index, dropDown in unitUpgradePrioritydropDowns {
+        priorityText := dropDown.Text
+        if priorityText && priorityText != "" {
+            priorityMapping.Push(priorityText)
+        }
+    }
+
+    SortByPriority(&successfulCoordinates, priorityMapping)
+
+    for coord in successfulCoordinates {
+        if IsMaxed(coord) {
+            AddToLog("Unit already maxed at: X" coord.x " Y" coord.y ". Skipping upgrade.")
+            continue
+        }
+        while !IsMaxUpgrade() {
+            UpgradeUnit(coord.x, coord.y)
+            if (IsMaxUpgrade()) {
+                break
+            }
+            if ShouldStopUpgrading() {
+                AddToLog("Found return to lobby, going back.")
+                successfulCoordinates := []
+                maxedCoordinates := []
+                return LobbyLoop()
+            }
+
+            Sleep(200)
+
+            if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) {
+                BetterClick(373, 237)
+            }
+            if (cardPickerEnabled = 1 && (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card))) {
+                cardSelector()
+            }
+            BetterClick(348, 391) ; next
+            BetterClick(565, 563) ; move mouse
+            Reconnect()
+        }
+
+        if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
+        {
+            BetterClick(373, 237)
+        }
+
+        BetterClick(565, 563) ; move mouse
+        AddToLog("Max upgrade reached for: X" coord.x " Y" coord.y ". Moving onto next unit")
+        maxedCoordinates.Push(coord)
+    }
+
+    AddToLog("All units upgraded or maxed.")
+    while !ShouldStopUpgrading() {
+        BetterClick(348, 391) ; next
+        Sleep(200)
+    }
+
+    return LobbyLoop()
+}
+
+SortByPriority(&array, priorityMapping) {
+    AddToLog("Starting unit sorting by priority mapping")
+    sortedArray := []
+
+    for index, slot in priorityMapping {
+        foundSlot := false
+
+        for i, item in array {
+            if (item.slot = slot) {
+                sortedArray.Push(item)
+                foundSlot := true
+            }
+        }
+
+        if !foundSlot {
+            AddToLog("No units found for: " slot ". Moving onto next slot")
+        }
+    }
+
+    array := sortedArray
+    AddToLog("Finished sorting units, starting upgrading")
+}
+
+
+/*UpgradeUnits() {
     global successfulCoordinates
+    global maxedCoordinates
 
     AddToLog("Beginning unit upgrades.")
 
@@ -290,11 +390,13 @@ UpgradeUnits() {
             if ShouldStopUpgrading() {
                 AddToLog("Found return to lobby, going back.")
                 successfulCoordinates := []
+                maxedCoordinates := []
                 return LobbyLoop()
             }
 
             if IsMaxUpgrade() {
                 AddToLog("Max upgrade reached for: X" coord.x " Y" coord.y)
+                maxedCoordinates.Push(successfulCoordinates.Get(index))
                 successfulCoordinates.RemoveAt(index) ; Remove the coordinate
                 continue ; Skip to the next coordinate
             }
@@ -316,7 +418,7 @@ UpgradeUnits() {
         }
 
         ; If all units are maxed, still check for stopping condition
-        if successfulCoordinates.Length = 0 {
+        if successfulCoordinates.Length = 0 and maxedCoordinates.Length > 0 {
             Reconnect()
             if (cardPickerEnabled = 1) {
                 if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
@@ -335,7 +437,7 @@ UpgradeUnits() {
 
         Reconnect()
     }
-}
+}*/
 
 
 UpgradeUnit(x, y) {
@@ -502,6 +604,7 @@ SendChat() {
     Sleep 1200
     SendInput("{Enter}")
     Sleep 250
+    BetterClick(130, 43)
 }
 
 TPtoSpawn() {
@@ -659,22 +762,27 @@ OnSpawnSetup() {
 
 }
 
+ReconnectImage := "|<>*83$47.zzzzzzzzzzzzzzzzzzy00zzzzzw00zzzzztztzzzzznznzzzzzjzbzzzzzzzDzzzzskyTzzzzU1wzzzzz8PVzzzzy667zzzzyA9zzzzzywzzzzzzkETzzzzz4QTzzzzwwwzzzzztxtzzzzzntnzzzzzU47zzzzzkQTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzUzznzzzz0zzbzzzyN3U0tzzwm32Rbzzs7aQtDzzksBtmTzzbaPnlzzzD0rXXzzyT1jX7zzzzzzyTzzzzzzszzzzzzznzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzy7zzzzzzU3zzzzzyDlzzzzztztzzzzzrztzzzzzDznzzzzyzzrzzzztzzbzzzzn4XDzzzza96TzzzzDzwzzzzzTzvzzzzyTzbzzzzwzzTzzzzwzwzzzzzwTXzzzzzy0Dzzzzzz3zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzyCDzzzzzwQTzzzzzskssMzzzkVUkUzzzV2Qa9zzz2YtQ1zzy19mtzzzwWMBsDzzt4svsTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzznzzzzzzzUzzzzzzy07zzzzzw00zzzzzs007zzzzk003zzzz0007zzzy000Tzzzw000zzzzs3k1zzzzwDw7zzzzzTzjzzzyzzTzzzzw7y7zzzzk1s3zzzzU007zzzz000Dzzzw000Tzzzs001zzzzw003zzzzzU07zzzzzw0DzzzzzzUzzzzzzztzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzU"
+
 Reconnect() {
     ; Check for Disconnected Screen
     color := PixelGetColor(519, 329) ; Get color at (519, 329)
-    if (color = 0x393B3D) {
+    if (color = 0x393B3D or ok := FindText(&X, &Y, 67 - 150000, 450 - 150000, 67 + 150000, 450 + 150000, 0, 0, ReconnectImage)) {
         AddToLog("Disconnected! Attempting to reconnect...")
 
-        ; Use Roblox deep linking to reconnect
-        Run("roblox://placeID=" 8304191830)
-        Sleep 2000
-        if WinExist(RobloxWindow) {
-            WinMove(27, 15, 800, 600, RobloxWindow)
-            WinActivate(RobloxWindow)
-            Sleep 1000
-        }
         loop {
             AddToLog("Reconnecting to Roblox...")
+            if WinExist(RobloxWindow) {
+                ProcessClose(WinGetPID(RobloxWindow))
+            }
+            Sleep 2000
+            Run("roblox://placeID=" 8304191830)
+            Sleep 2000
+            if WinExist(RobloxWindow) {
+                WinMove(27, 15, 800, 600, RobloxWindow)
+                WinActivate(RobloxWindow)
+                Sleep 1000
+            }
             Sleep 15000
             if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
                 AddToLog("Reconnected Succesfully!")

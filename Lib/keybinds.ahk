@@ -19,6 +19,4 @@ keybindsGui.Add("Text", "x10 y90 w100", "Stop macro:")
 hotkey3 := keybindsGui.Add("Hotkey", "x120 y90 w150", hotkeyKeybind3)
 
 saveButton := keybindsGui.Add("Button", "x10 y130 w260", "Save Keybinds")
-saveButton.OnEvent('Click', SaveHotkeys)
-
-keybindsGui.OnEvent('Close', SaveHotkeys)
+saveButton.OnEvent('Click', SaveConfig)
