@@ -32,6 +32,11 @@ CheckForUpdates() {
 
 
 DownloadAndUpdateRepo() {
+    if (IsProcessElevated(DllCall("GetCurrentProcessId")) != 1) {
+        AddToLog("Failed to update to latest version, make sure macro is running with admin rights.")
+        return
+    }
+
     zipUrl := "https://github.com/" repoOwner "/" repoName "/archive/refs/heads/main.zip"
 
     zipFilePath := A_ScriptDir "\repo.zip"
@@ -49,9 +54,11 @@ DownloadAndUpdateRepo() {
         return
     }
 
-    FileCopy(extractedFolderPath, A_ScriptDir, "1")
-
-    FileDelete(extractedFolderPath)
+    ErrorCount := CopyFilesAndFolders(extractedFolderPath . "\*", A_ScriptDir, "1")
+    if ErrorCount != 0 {
+        AddToLog ErrorCount " files/folders could not be copied."
+        return
+    }
 
     AddToLog("Updated! Restarting script")
     RestartScript()
@@ -59,6 +66,25 @@ DownloadAndUpdateRepo() {
 
 ExtractZIP(zipFilePath, targetDir) {
     RunWait("tar -xf " "" zipFilePath "" " -C " "" targetDir "" "", "", "Hide")
+}
+
+CopyFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite := false)
+{
+    ErrorCount := 0
+    try
+        FileCopy SourcePattern, DestinationFolder, DoOverwrite
+    catch as Err
+        ErrorCount := Err.Extra
+    Loop Files, SourcePattern, "D"
+    {
+        try
+            DirCopy A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
+        catch
+        {
+            ErrorCount += 1
+        }
+    }
+    return ErrorCount
 }
 
 RestartScript() {
