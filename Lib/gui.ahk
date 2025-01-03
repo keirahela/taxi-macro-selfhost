@@ -137,7 +137,7 @@ KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans
 
 MainGUI.SetFont("s16 bold", "Segoe UI")
 
-MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter Event Macro v1.1.6-3 - Taxi Macro")
+MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter Event Macro v1.1.6-5 - Taxi Macro")
 
 MainGUI.Show("x27 y15 w1100 h665")
 
