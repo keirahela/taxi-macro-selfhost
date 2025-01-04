@@ -1,4 +1,4 @@
-﻿; huge thanks to:
+; huge thanks to:
 ; raynnpjl for contributing the card selector
 ; yuh for heavily inspiring  the macro + some functions
 ; taxi for the base macro
@@ -39,6 +39,7 @@ CheckForUpdates()
 
 
 global cardPickerEnabled := 1
+global hasReconnect := 0
 
 SetupMacro() {
     if ControlGetVisible(keybindsGui) {
@@ -466,7 +467,6 @@ ShouldStopUpgrading(sleepamount := 300) {
     if CheckForLobbyButton() {
         if (WebhookCheckbox.Value = 1) {
             SendInput ("{Tab}")
-            Sleep 100
             SendWebhook()
         }
         BetterClick(376, 117)
@@ -515,6 +515,7 @@ LookDown() {
 }
 
 LoadedLoop() {
+    global hasReconnect
     AddToLog("Waiting to load in")
     loop {
         Sleep 1000
@@ -522,6 +523,10 @@ LoadedLoop() {
         {
             global StageStartTime := A_TickCount
             AddToLog("Loaded in")
+            if (hasReconnect == 1 && DisconnectCheckbox.Value == 1) {
+                sendRCWebhook()
+                hasReconnect := 0
+            }
             Sleep 1000
             BetterClick(350, 103) ; click yes
             BetterClick(350, 100) ; click yes
@@ -548,6 +553,10 @@ LoadedLoop() {
             if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P) and (ok != FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))) {
                 global StageStartTime := A_TickCount
                 AddToLog("Loaded in late")
+                if (hasReconnect == 1 && DisconnectCheckbox.Value == 1) {
+                    sendRCWebhook()
+                    hasReconnect := 0
+                }
                 Sleep 1000
                 BetterClick(350, 103) ; click yes
                 BetterClick(350, 100) ; click yes
@@ -770,30 +779,30 @@ OnSpawnSetup() {
 
 }
 
-ReconnectImage := "|<>*83$47.zzzzzzzzzzzzzzzzzzy00zzzzzw00zzzzztztzzzzznznzzzzzjzbzzzzzzzDzzzzskyTzzzzU1wzzzzz8PVzzzzy667zzzzyA9zzzzzywzzzzzzkETzzzzz4QTzzzzwwwzzzzztxtzzzzzntnzzzzzU47zzzzzkQTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzUzznzzzz0zzbzzzyN3U0tzzwm32Rbzzs7aQtDzzksBtmTzzbaPnlzzzD0rXXzzyT1jX7zzzzzzyTzzzzzzszzzzzzznzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzy7zzzzzzU3zzzzzyDlzzzzztztzzzzzrztzzzzzDznzzzzyzzrzzzztzzbzzzzn4XDzzzza96TzzzzDzwzzzzzTzvzzzzyTzbzzzzwzzTzzzzwzwzzzzzwTXzzzzzy0Dzzzzzz3zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzyCDzzzzzwQTzzzzzskssMzzzkVUkUzzzV2Qa9zzz2YtQ1zzy19mtzzzwWMBsDzzt4svsTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzznzzzzzzzUzzzzzzy07zzzzzw00zzzzzs007zzzzk003zzzz0007zzzy000Tzzzw000zzzzs3k1zzzzwDw7zzzzzTzjzzzyzzTzzzzw7y7zzzzk1s3zzzzU007zzzz000Dzzzw000Tzzzs001zzzzw003zzzzzU07zzzzzw0DzzzzzzUzzzzzzztzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzU"
-
 Reconnect() {
     ; Check for Disconnected Screen
     color := PixelGetColor(519, 329) ; Get color at (519, 329)
-    if (color = 0x393B3D or ok := FindText(&X, &Y, 67 - 150000, 450 - 150000, 67 + 150000, 450 + 150000, 0, 0, ReconnectImage)) {
+    global hasReconnect
+    if (color = 0x393B3D) {
         AddToLog("Disconnected! Attempting to reconnect...")
+        if (DisconnectCheckbox.Value = 1) {
+            sendDCWebhook()
+        }
 
+        ; Use Roblox deep linking to reconnect
+        Run("roblox://placeID=" 8304191830)
+        Sleep 2000
+        if WinExist(RobloxWindow) {
+            WinMove(27, 15, 800, 600, RobloxWindow)
+            WinActivate(RobloxWindow)
+            Sleep 1000
+        }
         loop {
             AddToLog("Reconnecting to Roblox...")
-            if WinExist(RobloxWindow) {
-                ProcessClose(WinGetPID(RobloxWindow))
-            }
-            Sleep 2000
-            Run("roblox://placeID=" 8304191830)
-            Sleep 2000
-            if WinExist(RobloxWindow) {
-                WinMove(27, 15, 800, 600, RobloxWindow)
-                WinActivate(RobloxWindow)
-                Sleep 1000
-            }
             Sleep 15000
             if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
                 AddToLog("Reconnected Succesfully!")
+                hasReconnect := 1
                 return GoToRaids() ; Check for challenges in the lobby
             }
             else {
