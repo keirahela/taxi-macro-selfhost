@@ -92,6 +92,7 @@ SaveConfigToFile(filePath) {
     File.WriteLine("[UnitPriority]")
     For index, value in unitPriorityOrder {
         File.WriteLine("UnitPriorityOrder" . index + 1 . "=" . value)
+        File.WriteLine("UUPEnabled=" UUPCheckbox.Value)
     }
 
     File.WriteLine("[Update]")
@@ -104,7 +105,7 @@ SaveConfigToFile(filePath) {
 LoadConfigFromFile(filePath) {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
-    global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox, DisconnectCheckbox
+    global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox, DisconnectCheckbox, UUPCheckbox
     global hotkey1, hotkey2, hotkey3
     global CardPicker
 
@@ -208,6 +209,9 @@ LoadConfigFromFile(filePath) {
                     if (dropDown) {
                         dropDown.Text := value
                     }
+                }
+                if RegExMatch(line, "UUPEnabled=(\d+)", &match) { ; unit priority toggle
+                    UUPCheckbox.Value := match.1 ; Set the checkbox value
                 }
             }
             else if (section = "Update") {

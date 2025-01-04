@@ -5,6 +5,7 @@ UnitUpgradePriority.MarginX := 20
 UnitUpgradePriority.MarginY := 20
 
 UnitUpgradePriorityOrder := UnitUpgradePriority.Add("GroupBox", "x20 y30 w180 h400 cWhite", "Unit Upgrade Priority Order")
+UUPCheckbox := WebhookGUI.Add("Checkbox", "x20 y40 cWhite", "Disabled")
 
 options := ["slot_1", "slot_2", "slot_3", "slot_4", "slot_5", "slot_6"]
 

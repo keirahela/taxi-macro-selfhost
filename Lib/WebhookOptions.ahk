@@ -38,8 +38,8 @@ sendWebhook() {
     ; Prepare the attachment and embed
     attachment := AttachmentBuilder(pCroppedBitmap)
     myEmbed := EmbedBuilder()
-    myEmbed.setTitle("Stage Completed")
-    myEmbed.setDescription("[Macro Runtime: " MacroRuntime "]`n[Stage Runtime: " StageRuntime "]")
+    myEmbed.setTitle(":tada: Stage Completed :tada:")
+    myEmbed.setDescription(":stopwatch: Macro Runtime: " MacroRuntime "`n:stopwatch: Stage Runtime: " StageRuntime "")
     myEmbed.setColor(0x0A5EB0)
     myEmbed.setImage(attachment)
     myEmbed.setFooter({ text: "Taxi Webhooks" })
@@ -77,8 +77,8 @@ sendDCWebhook() {
 
     ; Prepare the embed
     myEmbed := EmbedBuilder()
-    myEmbed.setTitle("Client Disconnected")
-    myEmbed.setDescription("[Disconnected At: " MacroRuntime "]`n[Stage Runtime: " StageRuntime "]")
+    myEmbed.setTitle(":exclamation: Client Disconnected :exclamation:")
+    myEmbed.setDescription(":stopwatch: Disconnected At: " MacroRuntime "`n:stopwatch: Stage Runtime: " StageRuntime "")
     myEmbed.setColor(0xB00A0A)
     myEmbed.setFooter({ text: "Taxi Webhooks" })
 
@@ -131,8 +131,8 @@ sendRCWebhook() {
     ; Prepare the attachment and embed
     attachment := AttachmentBuilder(pCroppedBitmap)
     myEmbed := EmbedBuilder()
-    myEmbed.setTitle("Client Reconnected")
-    myEmbed.setDescription("Reconnected At: " MacroRuntime "]")
+    myEmbed.setTitle(":white_check_mark: Client Reconnected :white_check_mark:")
+    myEmbed.setDescription(":stopwatch: Reconnected At: " MacroRuntime "")
     myEmbed.setColor(0x0AB02D)
     myEmbed.setImage(attachment)
     myEmbed.setFooter({ text: "Taxi Webhooks" })
