@@ -202,7 +202,137 @@ Numpad5:: {
     SendWebhook()
 }
 
+GetWindowCenter(WinTitle) {
+    x := 0 y := 0 Width := 0 Height := 0
+    WinGetPos(&X, &Y, &Width, &Height, WinTitle)
+
+    centerX := X + (Width / 2)
+    centerY := Y + (Height / 2)
+
+    return { x: centerX, y: centerY, width: Width, height: Height }
+}
+
+rect1 := { x: 37, y: 45, width: 254, height: 69 }
+rect2 := { x: 591, y: 45, width: 243, height: 47 }
+
+isInsideRect(rect, x, y) {
+    return (x >= rect.x and x <= rect.x + rect.width and y >= rect.y and y <= rect.y + rect.height)
+}
+
 TryPlacingUnits() {
+    global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
+    successfulCoordinates := [] ; Reset successfulCoordinates for each run
+    maxedCoordinates := []
+    savedPlacements := Map()
+
+    centerX := GetWindowCenter(RobloxWindow).x
+    centerY := GetWindowCenter(RobloxWindow).y
+    radius := step
+    direction := [[1, 0], [0, 1], [-1, 0], [0, -1]]
+    dirIndex := 0
+    directionCount := 0
+
+    ; Iterate through all slots (1 to 6)
+    for slotNum in [1, 2, 3, 4, 5, 6] {
+        enabled := "Enabled" slotNum
+        enabled := %enabled%
+        enabled := enabled.Value
+        placements := "Placement" slotNum
+        placements := %placements%
+        placements := placements.Text
+
+        ; Skip if the slot is not enabled
+        if !(enabled = 1) {
+            continue
+        }
+
+        AddToLog("Starting placements for Slot " slotNum " with " placements " placements.")
+
+        placementCount := 0
+        currentX := centerX
+        currentY := centerY
+        steps := 30
+        maxSteps := 5
+
+        AddToLog("Initial radius: " radius ", step size: " step)
+        AddToLog("Starting placement loop...")
+
+        while (placementCount < placements) {
+            for index, stepSize in [steps] {
+                AddToLog("Attempting to place unit at: " currentX ", " currentY)
+
+                if PlaceUnit(currentX, currentY, slotNum) {
+                    placementCount++
+                    successfulCoordinates.Push({ x: currentX, y: currentY, slot: "slot_" slotNum }) ; Track successful placements
+                    try {
+                        if savedPlacements.Get("slot_" slotNum) {
+                            savedPlacements.Set("slot_" slotNum, savedPlacements.Get("slot_" slotNum) + 1)
+                        }
+                    } catch {
+                        savedPlacements.Set("slot_" slotNum, 1)
+                    }
+
+                    if placementCount >= placements {
+                        break
+                    }
+                }
+
+                if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
+                {
+                    BetterClick(373, 237)
+                }
+                if (cardPickerEnabled = 1) {
+                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                        cardSelector()
+                    }
+                }
+                BetterClick(348, 391) ; next
+                BetterClick(565, 563) ; move mouse
+                if ShouldStopUpgrading(1) {
+                    AddToLog("Stopping due to finding lobby  condition.")
+                    return LobbyLoop()
+                }
+                Reconnect()
+
+                currentX += direction[dirIndex + 1][1] * steps
+                currentY += direction[dirIndex + 1][2] * steps
+
+                currentX += Random(-15, 15)
+                currentY += Random(-15, 15)
+
+                if currentX > 780 or currentY > 580 or currentX <= 0 or currentY < 0 {
+                    steps := 30
+                    currentX := centerX
+                    currentY := centerY
+                }
+
+                AddToLog("Updated coordinates: " currentX ", " currentY) ; Log updated coordinates
+            }
+
+            directionCount++
+
+            if directionCount == 2 {
+                steps += 30
+                AddToLog("Increasing step size to: " steps)
+                directionCount := 0
+            }
+
+            dirIndex := Mod(dirIndex + 1, 4)
+            if ShouldStopUpgrading(1) {
+                AddToLog("Stopping due to lobby condition.")
+                return LobbyLoop()
+            }
+        }
+
+        AddToLog("Completed " placementCount " placements for Slot " slotNum ".")
+    }
+
+    UpgradeUnits()
+
+    AddToLog("All slot placements and upgrades completed.")
+}
+
+/*TryPlacingUnits() {
     global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
     successfulCoordinates := [] ; Reset successfulCoordinates for each run
     maxedCoordinates := []
@@ -285,7 +415,7 @@ TryPlacingUnits() {
     UpgradeUnits()
 
     AddToLog("All slot placements and upgrades completed.")
-}
+}*/
 
 IsMaxed(coord) {
     global maxedCoordinates
@@ -681,6 +811,7 @@ AntiCaptcha() {
     ocrResult := OCR.FromRect(266, 309, 603 - 266, 352 - 309, , 2)
 
     ; Display OCR results
+    Reconnect()
     if ocrResult {
         BetterClick(414, 342)
         AddToLog("Captcha Detected: " ocrResult.Text)
@@ -732,6 +863,7 @@ AntiCaptcha() {
         AddToLog("Waiting for captcha cooldown then retrying")
         Sleep 6000
     }
+    Reconnect()
     return
 }
 

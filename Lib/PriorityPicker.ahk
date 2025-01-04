@@ -29,7 +29,7 @@ OpenPriorityPicker() {
     PriorityCardSelector.Show()
 }
 
-global priorityOrder := ["new_path", "shield", "health", "regen", "explosive_death", "speed", "range", "attack", "cooldown", "yen"]
+global priorityOrder := ["new_path", "range", "attack", "health", "shield", "regen", "explosive_death", "cooldown", "speed", "yen"]
 
 priority := []
 
