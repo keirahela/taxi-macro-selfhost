@@ -1,10 +1,11 @@
-; huge thanks to:
+﻿; huge thanks to:
 ; raynnpjl for contributing the card selector
 ; yuh for heavily inspiring  the macro + some functions
 ; taxi for the base macro
 
 #Requires AutoHotkey v2.0
 #Include %A_ScriptDir%\Lib\gui.ahk
+#Include %A_ScriptDir%\Lib\config.ahk
 #Include %A_ScriptDir%\Lib\FindText.ahk
 #Include %A_ScriptDir%\Lib\imageForCS.ahk
 #Include %A_ScriptDir%\Lib\OCR-main\Lib\OCR.ahk
@@ -354,6 +355,9 @@ UpgradeUnits() {
     while !ShouldStopUpgrading() {
         BetterClick(348, 391) ; next
         Sleep(200)
+        if (cardPickerEnabled = 1 && (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card))) {
+            cardSelector()
+        }
     }
 
     return LobbyLoop()
