@@ -82,6 +82,7 @@ SaveConfigToFile(filePath) {
     File.WriteLine("[WebhookSettings]")
     File.WriteLine("WebhookURL=" WebhookURL.Value)
     File.WriteLine("WebhookEnabled=" WebhookCheckbox.Value)
+    File.WriteLine("DCIEnabled=" DisconnectCheckbox.Value)
 
     File.WriteLine("[Keybinds]")
     File.WriteLine("Hotkey1=" hotkey1.Value)
@@ -103,7 +104,7 @@ SaveConfigToFile(filePath) {
 LoadConfigFromFile(filePath) {
     global enabled1, enabled2, enabled3, enabled4, enabled5, enabled6
     global placement1, placement2, placement3, placement4, placement5, placement6
-    global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox
+    global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox, DisconnectCheckbox
     global hotkey1, hotkey2, hotkey3
     global CardPicker
 
@@ -180,6 +181,9 @@ LoadConfigFromFile(filePath) {
                 }
                 if RegExMatch(line, "WebhookEnabled=(\d+)", &match) {
                     WebhookCheckbox.Value := match.1 ; Set the checkbox value
+                }
+                if RegExMatch(line, "DCIEnabled=(\d+)", &match) {
+                    DisconnectCheckbox.Value := match.1 ; Set the checkbox value
                 }
             }
             else if (section = "Keybinds") {
