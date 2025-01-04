@@ -14,6 +14,7 @@ WebhookGUI.Add("Text", "x10 y56 cWhite", "Enter your webhook URL")
 WebhookURL := WebhookGUI.Add("Edit", "x10 y70 w280", "")
 
 WebhookCheckbox := WebhookGUI.Add("Checkbox", "x10 y109 cWhite", "Enabled")
+DisconnectCheckbox := WebhookGUI.Add("Checkbox", "x10 y125 cWhite", "Disconnection Notifications")
 
 WebhookGUI.BackColor := "0c000a"
 WebhookGUI.MarginX := 20
