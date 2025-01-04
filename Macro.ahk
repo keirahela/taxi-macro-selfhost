@@ -467,6 +467,7 @@ ShouldStopUpgrading(sleepamount := 300) {
     if CheckForLobbyButton() {
         if (WebhookCheckbox.Value = 1) {
             SendInput ("{Tab}")
+            Sleep 100
             SendWebhook()
         }
         BetterClick(376, 117)
