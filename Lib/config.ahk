@@ -73,7 +73,7 @@ SaveConfigToFile(filePath) {
     for index, dropDown in dropDowns {
         File.WriteLine(Format("Enabled{}={}", index + 1, dropDown.Value))
     }
-    File.WriteLine("CardEnabled=" cardPickerEnabled)
+    File.WriteLine("CardEnabled=" CardPicker.Value)
 
     File.WriteLine("[ChatSettings]")
     File.WriteLine("MessageToSend=" ChatToSend.Value)
