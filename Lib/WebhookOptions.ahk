@@ -104,39 +104,6 @@ sendDCWebhook() {
 
 }
 
-sendRC1Webhook() {
-    MacroRuntime := CalculateElapsedTime(MacroStartTime)
-    StageRuntime := CalculateElapsedTime(StageStartTime)
-
-    ; Prepare the embed
-    myEmbed := EmbedBuilder()
-    myEmbed.setTitle("Client Reconnected")
-    myEmbed.setDescription("Reconnected At: " MacroRuntime "]")
-    myEmbed.setColor(0x0AB02D)
-    myEmbed.setFooter({ text: "Taxi Webhooks" })
-
-    try {
-        if (WebhookURL.Value != "") {
-            global Webhook := WebHookBuilder(WebhookURL.Value)
-        }
-    } catch {
-        MsgBox("Your webhook URL is not valid.", "Webhook", 4096 + 0)
-        return
-    }
-
-    ; Send the webhook
-    try {
-        Webhook.send({
-            embeds: [myEmbed],
-        })
-
-        AddToLog("Sent webhook successfully")
-    } catch {
-        AddToLog("Failed to send webhook")
-    }
-
-}
-
 sendRCWebhook() {
     MacroRuntime := CalculateElapsedTime(MacroStartTime)
     StageRuntime := CalculateElapsedTime(StageStartTime)
