@@ -220,116 +220,196 @@ isInsideRect(rect, x, y) {
 }
 
 TryPlacingUnits() {
-    global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
-    successfulCoordinates := [] ; Reset successfulCoordinates for each run
-    maxedCoordinates := []
-    savedPlacements := Map()
+    if PlacementDropdown.Text = "Spiral" {
+        global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
+        successfulCoordinates := [] ; Reset successfulCoordinates for each run
+        maxedCoordinates := []
+        savedPlacements := Map()
 
-    centerX := GetWindowCenter(RobloxWindow).x
-    centerY := GetWindowCenter(RobloxWindow).y
-    radius := step
-    direction := [[1, 0], [0, 1], [-1, 0], [0, -1]]
-    dirIndex := 0
-    directionCount := 0
+        centerX := GetWindowCenter(RobloxWindow).x
+        centerY := GetWindowCenter(RobloxWindow).y
+        radius := step
+        direction := [[1, 0], [0, 1], [-1, 0], [0, -1]]
+        dirIndex := 0
+        directionCount := 0
 
-    ; Iterate through all slots (1 to 6)
-    for slotNum in [1, 2, 3, 4, 5, 6] {
-        enabled := "Enabled" slotNum
-        enabled := %enabled%
-        enabled := enabled.Value
-        placements := "Placement" slotNum
-        placements := %placements%
-        placements := placements.Text
+        ; Iterate through all slots (1 to 6)
+        for slotNum in [1, 2, 3, 4, 5, 6] {
+            enabled := "Enabled" slotNum
+            enabled := %enabled%
+            enabled := enabled.Value
+            placements := "Placement" slotNum
+            placements := %placements%
+            placements := placements.Text
 
-        ; Skip if the slot is not enabled
-        if !(enabled = 1) {
-            continue
-        }
+            ; Skip if the slot is not enabled
+            if !(enabled = 1) {
+                continue
+            }
 
-        AddToLog("Starting placements for Slot " slotNum " with " placements " placements.")
+            AddToLog("Starting placements for Slot " slotNum " with " placements " placements.")
 
-        placementCount := 0
-        currentX := centerX
-        currentY := centerY
-        steps := 30
-        maxSteps := 5
+            placementCount := 0
+            currentX := centerX
+            currentY := centerY
+            steps := 30
+            maxSteps := 5
 
-        AddToLog("Initial radius: " radius ", step size: " step)
-        AddToLog("Starting placement loop...")
+            while (placementCount < placements) {
+                for index, stepSize in [steps] {
 
-        while (placementCount < placements) {
-            for index, stepSize in [steps] {
-                AddToLog("Attempting to place unit at: " currentX ", " currentY)
-
-                if PlaceUnit(currentX, currentY, slotNum) {
-                    placementCount++
-                    successfulCoordinates.Push({ x: currentX, y: currentY, slot: "slot_" slotNum }) ; Track successful placements
-                    try {
-                        if savedPlacements.Get("slot_" slotNum) {
-                            savedPlacements.Set("slot_" slotNum, savedPlacements.Get("slot_" slotNum) + 1)
+                    if PlaceUnit(currentX, currentY, slotNum) {
+                        placementCount++
+                        successfulCoordinates.Push({ x: currentX, y: currentY, slot: "slot_" slotNum }) ; Track successful placements
+                        try {
+                            if savedPlacements.Get("slot_" slotNum) {
+                                savedPlacements.Set("slot_" slotNum, savedPlacements.Get("slot_" slotNum) + 1)
+                            }
+                        } catch {
+                            savedPlacements.Set("slot_" slotNum, 1)
                         }
-                    } catch {
-                        savedPlacements.Set("slot_" slotNum, 1)
+
+                        if placementCount >= placements {
+                            break
+                        }
                     }
 
-                    if placementCount >= placements {
-                        break
+                    if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
+                    {
+                        BetterClick(373, 237)
+                    }
+                    if (cardPickerEnabled = 1) {
+                        if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                            cardSelector()
+                        }
+                    }
+                    BetterClick(348, 391) ; next
+                    BetterClick(565, 563) ; move mouse
+                    if ShouldStopUpgrading(1) {
+                        AddToLog("Stopping due to finding lobby  condition.")
+                        return LobbyLoop()
+                    }
+                    Reconnect()
+
+                    currentX += direction[dirIndex + 1][1] * steps
+                    currentY += direction[dirIndex + 1][2] * steps
+
+                    currentX += Random(-15, 15)
+                    currentY += Random(-15, 15)
+
+                    if currentX > 780 or currentY > 580 or currentX <= 0 or currentY < 0 {
+                        steps := 30
+                        currentX := centerX
+                        currentY := centerY
                     }
                 }
 
-                if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
-                {
-                    BetterClick(373, 237)
+                directionCount++
+
+                if directionCount == 2 {
+                    steps += 30
+                    directionCount := 0
                 }
-                if (cardPickerEnabled = 1) {
-                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
-                        cardSelector()
-                    }
-                }
-                BetterClick(348, 391) ; next
-                BetterClick(565, 563) ; move mouse
+
+                dirIndex := Mod(dirIndex + 1, 4)
                 if ShouldStopUpgrading(1) {
-                    AddToLog("Stopping due to finding lobby  condition.")
+                    AddToLog("Stopping due to lobby condition.")
                     return LobbyLoop()
                 }
-                Reconnect()
-
-                currentX += direction[dirIndex + 1][1] * steps
-                currentY += direction[dirIndex + 1][2] * steps
-
-                currentX += Random(-15, 15)
-                currentY += Random(-15, 15)
-
-                if currentX > 780 or currentY > 580 or currentX <= 0 or currentY < 0 {
-                    steps := 30
-                    currentX := centerX
-                    currentY := centerY
-                }
-
-                AddToLog("Updated coordinates: " currentX ", " currentY) ; Log updated coordinates
             }
 
-            directionCount++
-
-            if directionCount == 2 {
-                steps += 30
-                AddToLog("Increasing step size to: " steps)
-                directionCount := 0
-            }
-
-            dirIndex := Mod(dirIndex + 1, 4)
-            if ShouldStopUpgrading(1) {
-                AddToLog("Stopping due to lobby condition.")
-                return LobbyLoop()
-            }
+            AddToLog("Completed " placementCount " placements for Slot " slotNum ".")
         }
 
-        AddToLog("Completed " placementCount " placements for Slot " slotNum ".")
+        UpgradeUnits()
+
+        AddToLog("All slot placements and upgrades completed.")
     }
+    else
+    {
+        global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
+        successfulCoordinates := [] ; Reset successfulCoordinates for each run
+        maxedCoordinates := []
 
-    UpgradeUnits()
+        x := startX ; Initialize x only once
+        y := startY ; Initialize y only once
+        y2 := startY2 ; Initialize y2 only once
 
-    AddToLog("All slot placements and upgrades completed.")
+        ; Iterate through all slots (1 to 6)
+        for slotNum in [1, 2, 3, 4, 5, 6] {
+            enabled := "Enabled" slotNum
+            enabled := %enabled%
+            enabled := enabled.Value
+            placements := "Placement" slotNum
+            placements := %placements%
+            placements := placements.Text
+
+            ; Skip if the slot is not enabled
+            if !(enabled = 1) {
+                continue
+            }
+
+            AddToLog("Starting placements for Slot " slotNum " with " placements " placements.")
+
+            placementCount := 0
+            alternatingPlacement := 0
+
+            ; Continue placement for the current slot
+            while (placementCount < placements && y >= endY && y2 <= endY2) { ; Rows
+                while (placementCount < placements && x <= endX) { ; Columns
+                    if (alternatingPlacement == 0) {
+                        if PlaceUnit(x, y2, slotNum) {
+                            placementCount++
+                            successfulCoordinates.Push({ x: x, y: y2, slot: "slot_" slotNum }) ; Track successful placements
+                        }
+                    }
+                    if (alternatingPlacement == 1) {
+                        if PlaceUnit(x, y, slotNum) {
+                            placementCount++
+                            successfulCoordinates.Push({ x: x, y: y, slot: "slot_" slotNum }) ; Track successful placements
+                        }
+                    }
+                    if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
+                    {
+                        BetterClick(373, 237)
+                    }
+                    if (cardPickerEnabled = 1) {
+                        if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                            cardSelector()
+                            ;AddToLog("Succesfully picked card")
+                        }
+                    }
+                    BetterClick(348, 391) ; next
+                    BetterClick(565, 563) ; move mouse
+                    if ShouldStopUpgrading(1) {
+                        AddToLog("Stopping due to finding lobby  condition.")
+                        return LobbyLoop()
+                    }
+                    Reconnect()
+                    x += step - 20 ; Move to the next column
+                }
+                if x > endX {
+                    x := startX ; Reset x for the next row
+                    if (Mod(alternatingPlacement, 2) == 0) {
+                        y2 += (step + 25) ; Move to the next row, upwards
+                        alternatingPlacement += 1
+                    }
+                    else {
+                        y -= (step + 25) ; Move to the next row, downwards
+                        alternatingPlacement -= 1
+                    }
+                }
+                Reconnect()
+            }
+
+            AddToLog("Completed " placementCount " placements for Slot " slotNum ".")
+            Reconnect()
+        }
+
+        UpgradeUnits()
+
+        AddToLog("All slot placements and upgrades completed.")
+    }
 }
 
 /*TryPlacingUnits() {
@@ -428,69 +508,134 @@ IsMaxed(coord) {
 }
 
 UpgradeUnits() {
-    global successfulCoordinates, maxedCoordinates, unitUpgradePrioritydropDowns
-    AddToLog("Beginning prioritized unit upgrades.")
+    if UUPCheckbox.Value = 1 {
+        global successfulCoordinates, maxedCoordinates, unitUpgradePrioritydropDowns
+        AddToLog("Beginning prioritized unit upgrades.")
 
-    priorityMapping := []
-    for index, dropDown in unitUpgradePrioritydropDowns {
-        priorityText := dropDown.Text
-        if priorityText && priorityText != "" {
-            priorityMapping.Push(priorityText)
-        }
-    }
-
-    SortByPriority(&successfulCoordinates, priorityMapping)
-
-    for coord in successfulCoordinates {
-        if IsMaxed(coord) {
-            AddToLog("Unit already maxed at: X" coord.x " Y" coord.y ". Skipping upgrade.")
-            continue
-        }
-        while !IsMaxUpgrade() {
-            UpgradeUnit(coord.x, coord.y)
-            if (IsMaxUpgrade()) {
-                break
+        priorityMapping := []
+        for index, dropDown in unitUpgradePrioritydropDowns {
+            priorityText := dropDown.Text
+            if priorityText && priorityText != "" {
+                priorityMapping.Push(priorityText)
             }
-            if ShouldStopUpgrading() {
-                AddToLog("Found return to lobby, going back.")
-                successfulCoordinates := []
-                maxedCoordinates := []
-                return LobbyLoop()
+        }
+
+        SortByPriority(&successfulCoordinates, priorityMapping)
+
+        for coord in successfulCoordinates {
+            if IsMaxed(coord) {
+                AddToLog("Unit already maxed at: X" coord.x " Y" coord.y ". Skipping upgrade.")
+                continue
+            }
+            while !IsMaxUpgrade() {
+                UpgradeUnit(coord.x, coord.y)
+                if (IsMaxUpgrade()) {
+                    break
+                }
+                if ShouldStopUpgrading() {
+                    AddToLog("Found return to lobby, going back.")
+                    successfulCoordinates := []
+                    maxedCoordinates := []
+                    return LobbyLoop()
+                }
+
+                Sleep(200)
+
+                if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) {
+                    BetterClick(373, 237)
+                }
+                if (cardPickerEnabled = 1 && (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card))) {
+                    cardSelector()
+                }
+                BetterClick(348, 391) ; next
+                BetterClick(565, 563) ; move mouse
+                Reconnect()
             }
 
-            Sleep(200)
-
-            if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) {
+            if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
+            {
                 BetterClick(373, 237)
             }
+
+            BetterClick(565, 563) ; move mouse
+            AddToLog("Max upgrade reached for: X" coord.x " Y" coord.y ". Moving onto next unit")
+            maxedCoordinates.Push(coord)
+        }
+
+        AddToLog("All units upgraded or maxed.")
+        while !ShouldStopUpgrading() {
+            BetterClick(348, 391) ; next
+            Sleep(200)
             if (cardPickerEnabled = 1 && (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card))) {
                 cardSelector()
             }
-            BetterClick(348, 391) ; next
-            BetterClick(565, 563) ; move mouse
+        }
+
+        return LobbyLoop()
+    }
+    else
+    {
+        global successfulCoordinates
+        global maxedCoordinates
+
+        AddToLog("Beginning unit upgrades.")
+
+        while true { ; Infinite loop to ensure continuous checking
+            for index, coord in successfulCoordinates {
+
+                UpgradeUnit(coord.x, coord.y)
+
+                if ShouldStopUpgrading() {
+                    AddToLog("Found return to lobby, going back.")
+                    successfulCoordinates := []
+                    maxedCoordinates := []
+                    return LobbyLoop()
+                }
+
+                if IsMaxUpgrade() {
+                    AddToLog("Max upgrade reached for: X" coord.x " Y" coord.y)
+                    maxedCoordinates.Push(successfulCoordinates.Get(index))
+                    successfulCoordinates.RemoveAt(index) ; Remove the coordinate
+                    continue ; Skip to the next coordinate
+                }
+
+                Sleep(200)
+                if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
+                {
+                    BetterClick(373, 237)
+                }
+                if (cardPickerEnabled = 1) {
+                    if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
+                        cardSelector()
+                        ;AddToLog("Succesfully picked card")
+                    }
+                }
+                BetterClick(348, 391) ; next
+                BetterClick(565, 563) ; move mouse
+                Reconnect()
+            }
+
+            ; If all units are maxed, still check for stopping condition
+            if successfulCoordinates.Length = 0 and maxedCoordinates.Length > 0 {
+                Reconnect()
+                if (cardPickerEnabled = 1) {
+                    if (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card)) { ; CARD PICKER
+                        cardSelector()
+                        ;AddToLog("Succesfully picked card")
+                    }
+                }
+                BetterClick(348, 391) ; next
+                if ShouldStopUpgrading() {
+                    AddToLog("Stopping due to finding return to lobby button.")
+                    return LobbyLoop()
+                }
+                Sleep(2000) ; Prevent excessive looping
+
+            }
+
             Reconnect()
         }
-
-        if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
-        {
-            BetterClick(373, 237)
-        }
-
-        BetterClick(565, 563) ; move mouse
-        AddToLog("Max upgrade reached for: X" coord.x " Y" coord.y ". Moving onto next unit")
-        maxedCoordinates.Push(coord)
     }
-
-    AddToLog("All units upgraded or maxed.")
-    while !ShouldStopUpgrading() {
-        BetterClick(348, 391) ; next
-        Sleep(200)
-        if (cardPickerEnabled = 1 && (ok := FindText(&cardX, &cardY, 209, 203, 652, 404, 0, 0, pick_card))) {
-            cardSelector()
-        }
-    }
-
-    return LobbyLoop()
 }
 
 SortByPriority(&array, priorityMapping) {

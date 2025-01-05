@@ -37,7 +37,16 @@ StringJoin(delimiter, arr) {
 }
 
 SaveConfigToFile(filePath) {
-    global hotkey1, hotkey2, hotkey3, AutoUpdate
+    global hotkey1, hotkey2, hotkey3, AutoUpdate, PlacementDropdown
+    directory := "Lib\Settings"
+
+    if !DirExist(directory) {
+        DirCreate(directory)
+    }
+    if !FileExist(filePath) {
+        FileAppend("", filePath)
+    }
+
     File := FileOpen(filePath, "w")
     if !File {
         AddToLog("Failed to save the configuration.")
@@ -92,11 +101,14 @@ SaveConfigToFile(filePath) {
     File.WriteLine("[UnitPriority]")
     For index, value in unitPriorityOrder {
         File.WriteLine("UnitPriorityOrder" . index + 1 . "=" . value)
-        File.WriteLine("UUPEnabled=" UUPCheckbox.Value)
     }
+    File.WriteLine("UUPEnabled=" UUPCheckbox.Value)
 
     File.WriteLine("[Update]")
     File.WriteLine("AutoUpdateEnabled=" AutoUpdate.Value)
+
+    File.WriteLine("[PlacementLogic]")
+    File.WriteLine("Logic=" PlacementDropdown.Value)
 
     File.Close()
     AddToLog("Configuration saved successfully to " filePath ".`nIf you changed keybinds, you will have to restart the macro.`n")
@@ -107,7 +119,7 @@ LoadConfigFromFile(filePath) {
     global placement1, placement2, placement3, placement4, placement5, placement6
     global dropDowns, ChatToSend, ChatStatusBox, WebhookURL, WebhookCheckbox, DisconnectCheckbox, UUPCheckbox
     global hotkey1, hotkey2, hotkey3
-    global CardPicker
+    global CardPicker, PlacementDropdown
 
     if !FileExist(filePath) {
         AddToLog("No configuration file found. Default settings will be used.")
@@ -118,6 +130,7 @@ LoadConfigFromFile(filePath) {
         KeyBinds.Text := "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro"
         global autoUpdateEnabled := 1
         AutoUpdate.Value := 1
+        PlacementDropdown.Value := 1
     } else {
         ; Open file for reading
         file := FileOpen(filePath, "r", "UTF-8")
@@ -220,6 +233,11 @@ LoadConfigFromFile(filePath) {
                     global autoUpdateEnabled := match.1
                 }
             }
+            else if (section = "PlacementLogic") {
+                if RegExMatch(line, "Logic=(\d+)", &match) {
+                    PlacementDropdown.Value := match.1 ; Set the checkbox value
+                }
+            }
         }
 
         hotkeyKeybind1 := hotkey1.Value or "F1"
@@ -252,11 +270,6 @@ SaveLocal(*) {
 }
 
 LoadGlobal(*) {
-    if (IsProcessElevated(DllCall("GetCurrentProcessId")) != 1) {
-        AddToLog("Failed to load global config, make sure macro is running with admin rights.")
-        return
-    }
-
     LoadConfigFromFile("C:\config.txt")
     GuiClose()
 }

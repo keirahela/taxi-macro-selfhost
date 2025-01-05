@@ -6,7 +6,7 @@ PriorityCardSelector.MarginY := 20
 
 PriorityOrder := PriorityCardSelector.Add("GroupBox", "x20 y30 w180 h400 cWhite", "Modifier Priority Order")
 
-options := ["new_path", "shield", "health", "regen", "explosive_death", "speed", "range", "attack", "cooldown", "yen"]
+options := ["new_path", "range", "attack", "health", "shield", "regen", "explosive_death", "cooldown", "speed", "yen"]
 
 numDropDowns := 10
 yStart := 70

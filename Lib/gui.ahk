@@ -70,6 +70,23 @@ SendChatBttn.OnEvent("Click", (*) => OpenUnitUpgrade())
 SendChatBttn := MainSettings.Add("Button", "x220 y110 w150", "Card priority order")
 SendChatBttn.OnEvent("Click", (*) => OpenPriorityPicker())
 
+SendChatBttn := MainSettings.Add("Button", "x220 y170 w150", "Placement Logic")
+SendChatBttn.OnEvent("Click", (*) => OpenPlacementLogic())
+
+global PlacementLogicUI := Gui("+AlwaysOnTop")
+PlacementLogicUI.SetFont("s10 bold", "Segoe UI")
+PlacementLogicUI.BackColor := "0c000a"
+PlacementLogicUI.MarginX := 20
+PlacementLogicUI.MarginY := 20
+
+PlacementLogicUI.Add("Text", "x10 y8 w250 cWhite", "If you feel like the placement is not working as intended, change this option")
+
+PlacementLogicUI.SetFont("s8", "Segoe UI")
+global PlacementDropdown := PlacementLogicUI.Add("DropDownList", "x10 y60  w250 cffffff", ["Spiral", "Lines"])
+
+OpenPlacementLogic() {
+    PlacementLogicUI.Show()
+}
 
 ; Show the main settings GUI
 ; Show the initial GUI
@@ -177,4 +194,8 @@ OpenSendChat() {
     SendChatGUI.Show("w300 h150")
 }
 
-LoadGlobal()
+if FileExist("C:\config.txt") {
+    LoadGlobal()
+} else {
+    LoadLocal()
+}
