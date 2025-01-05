@@ -4,7 +4,7 @@
 
 global repoOwner := "keirahela"
 global repoName := "taxi-macro-selfhost"
-global currentVersion := "v1.1.6-7"
+global currentVersion := "v1.1.6-8"
 
 CheckForUpdates() {
     url := "https://api.github.com/repos/" repoOwner "/" repoName "/releases/latest"
