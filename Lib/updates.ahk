@@ -20,6 +20,8 @@ CheckForUpdates() {
     response := http.responseText
     latestVersion := JSON.parse(response).Get("tag_name")
 
+    global autoUpdateEnabled := autoUpdateEnabled or 1
+
     if (latestVersion != currentVersion) {
         AddToLog("A new version is available! Current version: " currentVersion "`nLatest version: " latestVersion)
         if (autoUpdateEnabled) {

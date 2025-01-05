@@ -214,6 +214,7 @@ GetWindowCenter(WinTitle) {
 
 rect1 := { x: 37, y: 45, width: 254, height: 69 }
 rect2 := { x: 591, y: 45, width: 243, height: 47 }
+rect3 := { x: 36, y: 594, width: 105, height: 51 }
 
 isInsideRect(rect, x, y) {
     return (x >= rect.x and x <= rect.x + rect.width and y >= rect.y and y <= rect.y + rect.height)
@@ -296,6 +297,12 @@ TryPlacingUnits() {
 
                     currentX += Random(-15, 15)
                     currentY += Random(-15, 15)
+
+                    if isInsideRect(rect1, currentX, currentY) or isInsideRect(rect2, currentX, currentY) or isInsideRect(rect3, currentX, currentY) {
+                        steps := 30
+                        currentX := centerX
+                        currentY := centerY
+                    }
 
                     if currentX > 780 or currentY > 580 or currentX <= 0 or currentY < 0 {
                         steps := 30
