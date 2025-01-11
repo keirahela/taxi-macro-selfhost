@@ -82,7 +82,10 @@ PlacementLogicUI.MarginY := 20
 PlacementLogicUI.Add("Text", "x10 y8 w250 cWhite", "If you feel like the placement is not working as intended, change this option")
 
 PlacementLogicUI.SetFont("s8", "Segoe UI")
-global PlacementDropdown := PlacementLogicUI.Add("DropDownList", "x10 y60  w250 cffffff", ["Spiral", "Lines", "Lines + 2x2 Grid Finder", "Zig Zag"])
+global PlacementDropdown := PlacementLogicUI.Add("DropDownList", "x10 y60  w250 cffffff", 
+["Spiral", "Lines", 
+"Lines + 2x2 Grid Finder", "Zig Zag", 
+"Zig Zag + 2x2 Grid Finder", "Spiral + 2x2 Grid Finder"])
 
 OpenPlacementLogic() {
     PlacementLogicUI.Show()

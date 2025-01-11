@@ -223,7 +223,7 @@ isInsideRect(rect, x, y) {
 ; ********* PLACEMENT ALGOS START HERE **********
 
 ;By @keirahela
-SpiralPlacement() {
+SpiralPlacement(gridPlacement := false) {
     global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
     successfulCoordinates := [] ; Reset successfulCoordinates for each run
     maxedCoordinates := []
@@ -275,6 +275,11 @@ SpiralPlacement() {
                     if placementCount >= placements {
                         break
                     }
+
+                    if (gridPlacement) {
+                        PlaceInGrid(currentX, currentY, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
+                    }
+
                 }
 
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
@@ -543,7 +548,7 @@ LinePlacementGrid() {
 
 ; Places units in a zig-zag pattern
 ; By @Durrenth
-ZigZagPlacement() {
+ZigZagPlacement(gridPlacement := false) {
     global startX, startY, endX, endY, step, successfulCoordinates, maxedCoordinates
     successfulCoordinates := [] ; Reset successfulCoordinates for each run
     maxedCoordinates := []
@@ -554,7 +559,9 @@ ZigZagPlacement() {
 
     rectZigZag := { x: startX, y: startY, width: 500 , height: 500 }
 
-    x := startX ; Initialize x only once
+    ; += Random(0, 15)
+
+    x := startX + Random(0, 15) ; Incase 2 or more players are using the same placement, randomize starting location by 0-15 steps.
     y1 := startY ; Initialize y only once
     y2 := startY2 ; Initialize y2 only once
     y := y1 ; Start with the top Y coordinate
@@ -583,7 +590,7 @@ ZigZagPlacement() {
             if PlaceUnit(x, y, slotNum) {
                 placementCount++
                 successfulCoordinates.Push({ x: x, y: y, slot: "slot_" slotNum }) ; Track successful placements
-                AddToLog("Unit placed at x: " x ", y: " y)
+                ;AddToLog("Unit placed at x: " x ", y: " y)
                 try {
                     if savedPlacements.Get("slot_" slotNum) {
                         savedPlacements.Set("slot_" slotNum, savedPlacements.Get("slot_" slotNum) + 1)
@@ -595,6 +602,11 @@ ZigZagPlacement() {
                 if placementCount >= placements {
                     break
                 }
+
+                if (gridPlacement) {
+                    PlaceInGrid(x, y, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
+                }
+
             }
 
             if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
@@ -624,14 +636,26 @@ ZigZagPlacement() {
                 ; Alternate y between y1 and y2 for zig-zag effect
                 y := (y = y1) ? y2 : y1
             } else {
-                AddToLog("Reached end of X-range or coordinates are outside rectangles. Moving to the next row.")
-                startX += 20
-                x := startX ; Reset x to the starting position
-                y1 := startY + step ; Move top Y-coordinate down
-                y2 := startY2 + step ; Move bottom Y-coordinate down
-                startY := y1
-                startY2 := y2
-                y := y1 ; Start the new row with the top Y-coordinate
+
+                ; Incase y value goes out of bounds, re-initialize starting locations, and add a huge offset to x
+                if (y >= endY) {
+                    AddToLog("Reached end of Y-range or coordinates are outside rectangles. Moving to the next row.")
+                    x := startX + Random(20,40) ; Reset x to the starting position, add random offset to it incase 2 players are using same placement style
+                    startY := 170
+                    startY2 := 200
+                    y1 := startY
+                    y2 := startY2
+                    y := y1
+                } else { ; If y isin't OOB
+                    AddToLog("Reached end of X-range or coordinates are outside rectangles. Moving to the next row.")
+                    x := startX + Random(0,15) ; Reset x to the starting position, add random offset to it incase 2 players are using same placement style
+                    y1 := startY + step ; Move top Y-coordinate down
+                    y2 := startY2 + step ; Move bottom Y-coordinate down
+                    startY := y1 ; This is needed incase you loop again. Otherwise you will keep starting at the default startY/startY2 locations
+                    startY2 := y2
+                    y := y1 ; Start the new row with the top Y-coordinate
+                }
+
             }
             
             
@@ -650,6 +674,8 @@ PlaceInGrid(startX, startY, slotNum, & placementCount, & successfulCoordinates, 
     ; Places untis in a 2x2 grid, starting from the top left where the initial unit is placed (as dictated by startX and startY)
     ; U x
     ; x x 
+       ;"Y"     ;"X"   
+    ;[number1,number2]
 
     gridOffsets := [
        [30, 0],  ; Row 1, Column 0
@@ -658,8 +684,9 @@ PlaceInGrid(startX, startY, slotNum, & placementCount, & successfulCoordinates, 
    ]
    for index, offset in gridOffsets {
 
-       gridX := startX + offset[2] ; Move horizontally by 'step'
-       gridY := startY + offset[1] ; Move vertically by 'step'
+       ; Adds the value that's stored in the array at the current index to either x or y's starting location 
+       gridX := startX + offset[2] ; Move horizontally by 'step' from the initial start location
+       gridY := startY + offset[1] ; Move vertically by 'step' from the initial start location
 
        if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
         {
@@ -716,6 +743,10 @@ TryPlacingUnits() {
             LinePlacementGrid()
         case "Zig Zag":
             ZigZagPlacement()
+        case "Zig Zag + 2x2 Grid Finder":
+            ZigZagPlacement(true)
+        case "Spiral + 2x2 Grid Finder":
+            SpiralPlacement(true)
         default:
             AddToLog("Invalid selection")
     }
