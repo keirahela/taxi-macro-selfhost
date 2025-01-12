@@ -36,6 +36,16 @@ P := "|<>*88$35.3zzzy0Tzzzy0zzzzy3zzzzw7zzzzsTzzzzszzzzzlzzzzzXzw1zz7zs1zyDzk1zw
 P2 := "|<>*102$165.1zzzs000Dzzz0003zzzk000zzzw0zzzzk007zzzy001zzzzU00TzzzsDzzzz001zzzzs00Tzzzy007zzzzXzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzrzzzzy00zzzzzk0Dzzzzw03zzzzzzzzzzk07zw3zy01zzzzzU0Tzzzzzzzzzy00zy07zk0Dzzzzw03zlyDzzzzzzk07zU0Ty01zzzzzU0Ts30Tzzzzzy00zs01zk0Dzzzzw03y001zzz0zzk07y0k7y01zzzzzU0TU007zzvzzy00zU60Tk0Dzzzzw03w000zzzTzzk07w003y01zzzzTU0TU007zzvzzy00z000Dk0Dzzzzw03w000zzzzzzk07s0k1y01zzzzzU0TU007zzzzzy00z060Dk0Dzzzzw03y001zzzzzzk07s0k1y01zzzzzU0Tk00Dzzzzzy00z060Dk0Dzzzzw03z003zzzzzzk07s0k1y01zzzzzU0Tw00zzzzzzy00zU60Tk0Dzzzzw03zk0Dzzzzzzk07w0k3y01zzzzzU0Tz03zzzzzzy00zk60zk0Dzzzzw03zw0zzzzzzzk07z00Dy01zzzzzU0TzkDzzzzzzy00zw03zk0Dzzzzw03zzbzzzzzzzk07zk0zy01zzzzzU0Tzzzzzzzzzy00zzkzzk0Dzzzzw03zzzzzzzzzzk07zzzzy01zzzzzU0Tzzzzvzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzlzzzzs00Dzzzz003zzzzk00zzzzw7zzzy000zzzzk00Dzzzw003zzzz0Dzzz0001zzzs000Tzzy0007zzzUU"
 Priority := "|<>*92$70.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs0000000000T00000000000s00000000001U0000000000600000000000M007zs000001U01zwU07U0060060200m000M00E1DvuA001U017zysss0060043W110U00M00E68442001U010MXkss006004TWD1X000M00Fu8x2C001U0168XUQ8006006En/1kU00M00D1zbxy001U0000870U00600000000000M00000000001k0000000000DU0000000001zzzzzzzzzzzzU"
 
+; Just in case a player runs into "Cannot place unit" these values will hold that placement number. This is
+; needed for every placement amount because FindText doesn't recognize the text "Cannot place more than" very well.
+CannotPlaceUnit1:="|<>FF494C-0.90$11.001k7UT1y7wTszkrUD0S0w1s3k7UD0S0w1s1k04"
+CannotPlaceUnit2:="|<>FF494C-0.90$18.0000001z03zU7zk7zkD3sD1sD1sD3s03k0Dk0TU1z03y07s0DzsDzwDzs7zs000000U"
+CannotPlaceUnit3:="|<>FF494C-0.90$17.0000007w0Tw1zw3tw7Vs63k0zU3y07s0Ds03sA3kw7VsD3zy3zs3zU1w0000008"
+CannotPlaceUnit4:="|<>FF494C-0.90$16.000000sQ3lkC71sQ7VkS71kQD1kw73zwDzkzz00w01k0700Q01k07000002"
+CannotPlaceUnit5:="|<>FD494C-1.00/FF494C-1.00$14.000zUTwDz3zkw0C03U0zUTw7zUzw0701s0SAD7zlzsDw0y000U"
+CannotPlaceUnitsArr := [CannotPlaceUnit1, CannotPlaceUnit2, CannotPlaceUnit3, CannotPlaceUnit4, CannotPlaceUnit5]
+
+
 CheckForUpdates()
 
 
@@ -197,6 +207,16 @@ IsPlacementSuccessful() {
     return false
 }
 
+CannotPlaceUnits() {
+    global CannotPlaceUnitsArr ; Pretty sure this line here isin't needed but it works so I'm leaving it
+    for index, placementAmount in CannotPlaceUnitsArr {
+        if (ok := FindText(&X, &Y, 491, 258, 535, 537, 0, 0, placementAmount)) {
+            return true
+        }
+    }
+    return false
+}
+
 
 Numpad5:: {
     SendWebhook()
@@ -280,6 +300,10 @@ SpiralPlacement(gridPlacement := false) {
                         PlaceInGrid(currentX, currentY, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
                     }
 
+                }
+
+                if(CannotPlaceUnits()) {
+                    break
                 }
 
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
@@ -378,12 +402,22 @@ LinePlacement() {
                         successfulCoordinates.Push({ x: x, y: y2, slot: "slot_" slotNum }) ; Track successful placements
                     }
                 }
+
+                if(CannotPlaceUnits()) {
+                    break
+                }
+
                 if (alternatingPlacement == 1) {
                     if PlaceUnit(x, y, slotNum) {
                         placementCount++
                         successfulCoordinates.Push({ x: x, y: y, slot: "slot_" slotNum }) ; Track successful placements
                     }
                 }
+
+                if(CannotPlaceUnits()) {
+                    break
+                }
+
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
                 {
                     BetterClick(373, 237)
@@ -480,6 +514,10 @@ LinePlacementGrid() {
 
                         PlaceInGrid(x, y2, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
                     }
+
+                    if(CannotPlaceUnits()) {
+                        break
+                    }
                     
                 }
 
@@ -503,6 +541,11 @@ LinePlacementGrid() {
                         PlaceInGrid(x, y2, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
                         
                     }
+
+                    if(CannotPlaceUnits()) {
+                        break
+                    }
+
                 }
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
                 {
@@ -557,7 +600,7 @@ ZigZagPlacement(gridPlacement := false) {
     startY2 := 200, endY2 := 500
     startY := 170, endY :=470
 
-    rectZigZag := { x: startX, y: startY, width: 500 , height: 500 }
+    rectZigZag := { x: startX, y: startY, width: 670 , height: 500 }
 
     ; += Random(0, 15)
 
@@ -587,6 +630,10 @@ ZigZagPlacement(gridPlacement := false) {
 
         while (placementCount < placements) {
 
+            ; if(CannotPlaceUnits()) {
+            ;     break
+            ; }
+
             if PlaceUnit(x, y, slotNum) {
                 placementCount++
                 successfulCoordinates.Push({ x: x, y: y, slot: "slot_" slotNum }) ; Track successful placements
@@ -609,6 +656,10 @@ ZigZagPlacement(gridPlacement := false) {
 
             }
 
+            if(CannotPlaceUnits()) {
+                break
+            }
+
             if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
             {
                 BetterClick(373, 237)
@@ -629,7 +680,7 @@ ZigZagPlacement(gridPlacement := false) {
             
             ; Move to the next X-coordinate
             x += step
-            AddToLog("x: " x ", y: " y)
+            ;AddToLog("x: " x ", y: " y)
 
              ; If X exceeds the end range, reset it and move down
              if (isInsideRect(rectZigZag, x, y)) {
@@ -710,7 +761,7 @@ PlaceInGrid(startX, startY, slotNum, & placementCount, & successfulCoordinates, 
        if PlaceUnit(gridX, gridY, slotNum) {
            placementCount++ ; Increment the placement count
            successfulCoordinates.Push({ x: gridX, y: gridY, slot: "slot_" slotNum }) ; Track the placement
-           AddToLog("Placed unit at (" gridX ", " gridY ") in 3x3 grid.")
+           ;AddToLog("Placed unit at (" gridX ", " gridY ") in 2x2 grid.")
 
            ; Update or initialize saved placements for the current slot
            try {
