@@ -210,8 +210,9 @@ IsPlacementSuccessful() {
 
 CannotPlaceUnits() {
     global CannotPlaceUnitsArr ; Pretty sure this line here isin't needed but it works so I'm leaving it
+    AddToLog("Entered Cannot Place Units")
     for index, placementAmount in CannotPlaceUnitsArr {
-        if (ok := FindText(&X, &Y, 491, 258, 535, 537, 0, 0, placementAmount)) {
+        if (ok := FindText(&X, &Y, 154, 478, 700, 531, 0, 0, placementAmount)) {
             return true
         }
     }
