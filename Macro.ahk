@@ -279,8 +279,12 @@ SpiralPlacement(gridPlacement := false) {
         currentY := centerY
         steps := 30
         maxSteps := 5
+        exitLoops := false
 
         while (placementCount < placements) {
+            if(exitLoops) {
+                break
+            }
             for index, stepSize in [steps] {
 
                 if PlaceUnit(currentX, currentY, slotNum) {
@@ -305,6 +309,7 @@ SpiralPlacement(gridPlacement := false) {
                 }
 
                 if(CannotPlaceUnits()) {
+                    exitLoops := true
                     break
                 }
 
@@ -394,9 +399,13 @@ LinePlacement() {
 
         placementCount := 0
         alternatingPlacement := 0
+        exitLoops := false
 
         ; Continue placement for the current slot
         while (placementCount < placements && y >= endY && y2 <= endY2) { ; Rows
+            if(exitLoops) {
+                break
+            }
             while (placementCount < placements && x <= endX) { ; Columns
                 if (alternatingPlacement == 0) {
                     if PlaceUnit(x, y2, slotNum) {
@@ -406,6 +415,7 @@ LinePlacement() {
                 }
 
                 if(CannotPlaceUnits()) {
+                    exitLoops := true
                     break
                 }
 
@@ -417,6 +427,7 @@ LinePlacement() {
                 }
 
                 if(CannotPlaceUnits()) {
+                    exitLoops := true
                     break
                 }
 
@@ -492,9 +503,13 @@ LinePlacementGrid() {
 
         placementCount := 0
         alternatingPlacement := 0
+        exitLoops := false
 
         ; Continue placement for the current slot
         while (placementCount < placements && y >= endY && y2 <= endY2) { ; Rows
+            if(exitLoops) {
+                break
+            }
             while (placementCount < placements && x <= endX) { ; Columns
                 if (alternatingPlacement == 0) {
 
@@ -518,6 +533,7 @@ LinePlacementGrid() {
                     }
 
                     if(CannotPlaceUnits()) {
+                        exitLoops := true
                         break
                     }
                     
@@ -545,6 +561,7 @@ LinePlacementGrid() {
                     }
 
                     if(CannotPlaceUnits()) {
+                        exitLoops := true
                         break
                     }
 
