@@ -1,3 +1,5 @@
+# DEPRECATED, BUY https://discord.gg/ANUFU8mVas INSTEAD
+
 # Anime Adventures Macro
 
 A quality-of-life rewrite of the **Anime Adventures Macro** originally developed by [Taxi Macro](https://discord.gg/taximacro). This version adds community-requested features and additional improvements to enhance usability and functionality.
