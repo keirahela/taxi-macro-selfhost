@@ -40,7 +40,6 @@ GuideBttn.OnEvent("Click", (*) => OpenGuide())
 #Requires AutoHotkey v2.0
 #MaxThreadsPerHotkey 2
 
-
 ; Create the initial GUI
 MainSettings := Gui("+AlwaysOnTop")
 MainSettings.SetFont("s8 bold", "Segoe UI")
@@ -79,13 +78,14 @@ PlacementLogicUI.BackColor := "0c000a"
 PlacementLogicUI.MarginX := 20
 PlacementLogicUI.MarginY := 20
 
-PlacementLogicUI.Add("Text", "x10 y8 w250 cWhite", "If you feel like the placement is not working as intended, change this option")
+PlacementLogicUI.Add("Text", "x10 y8 w250 cWhite",
+    "If you feel like the placement is not working as intended, change this option")
 
 PlacementLogicUI.SetFont("s8", "Segoe UI")
-global PlacementDropdown := PlacementLogicUI.Add("DropDownList", "x10 y60  w250 cffffff", 
-["Spiral", "Lines", 
-"Lines + 2x2 Grid Finder", "Zig Zag", 
-"Zig Zag + 2x2 Grid Finder", "Spiral + 2x2 Grid Finder"])
+global PlacementDropdown := PlacementLogicUI.Add("DropDownList", "x10 y60  w250 cffffff",
+    ["Spiral", "Lines",
+        "Lines + 2x2 Grid Finder", "Zig Zag",
+        "Zig Zag + 2x2 Grid Finder", "Spiral + 2x2 Grid Finder"])
 
 OpenPlacementLogic() {
     PlacementLogicUI.Show()
@@ -148,16 +148,16 @@ SaveConfigBttn.OnEvent("Click", (*) => LoadConfig())
 SaveConfigBttn := MainGUI.Add("Button", "x960 y270 w95 h30 cffffff +Center", "Save config")
 SaveConfigBttn.OnEvent("Click", (*) => SaveConfig())
 
-
 MainGUI.Add("GroupBox", "x830 y320 w238 h210 cfffd90 ", "Activity Log ")
 ActivityLog := MainGUI.Add("Text", "x830 y340 w238 h300 r11 cffffff +BackgroundTrans +Center", "Macro Launched")
 
 MainGUI.Add("GroupBox", "x830 y540 w238 h80 cfffd90 ", "Keybinds")
-KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans +Center", "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro")
+KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans +Center",
+    "F1 - Fix Roblox Position `n F2 - Start Macro `n F3 - Stop Macro")
 
 MainGUI.SetFont("s16 bold", "Segoe UI")
 
-MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter Event Macro v1.1.6-8 - Taxi Macro")
+MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter Event Macro v1.1.6-9 - Taxi Macro")
 
 MainGUI.Show("x27 y15 w1100 h665")
 
@@ -174,11 +174,12 @@ OpenDiscord() {
     Run("https://discord.gg/UB9AaPzqdq")
 }
 
-
 SendChatGUI := Gui("+AlwaysOnTop")
 
 SendChatGUI.SetFont("s8 bold", "Segoe UI")
-SendChatGUI.Add("Text", "x10 y8 w280 cWhite", "Would you like the macro to send a message once it loads in a game? (it only sends it once per game and this is optional)")
+SendChatGUI.Add("Text", "x10 y8 w280 cWhite",
+    "Would you like the macro to send a message once it loads in a game? (it only sends it once per game and this is optional)"
+)
 
 SendChatGUI.Add("Text", "x10 y56 cWhite", "Message to send")
 ChatToSend := SendChatGUI.Add("Edit", "x10 y70 w280", "")
@@ -191,7 +192,6 @@ SendChatGUI.MarginY := 20
 
 SendChatGUI.OnEvent("Close", (*) => SendChatGUI.Hide())
 SendChatGUI.Title := "Send Chat"
-
 
 OpenSendChat() {
     SendChatGUI.Show("w300 h150")

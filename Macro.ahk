@@ -19,25 +19,41 @@ global StageStartTime := A_TickCount
 
 SendMode "Event"
 RobloxWindow := "ahk_exe RobloxPlayerBeta.exe"
-UnitExistence := "|<>*91$66.btzzzzzzyDzXlzzzzzzyDzXlzzzzzzyDzXlzzzyzzyDbXlUS0UM3UC1XlUA0UE30A1XlW4EXl34AMXlX0sbXXC80XVX4MbXX6A1U3UA0bk30ARk7UC0bk3UA1sDUz8bw3kC1zzbyszzzzzzzzbw1zzzzzzzzby3zzzzzzzzzzjzzzzzzU"
-MaxUpgrade := "|<>*134$53.0000000007U3k00000TUDk00001XUsk000033XVU0000636300800A3M6TzwS0M3UDrjRa0k70S0AS61U40s0EMAD001U0k0Ty41331k1zwA6673k7zsQAAS7UTzkwsMQC0TzVzkk0M0Tz3zVk0kETy7z3k1VkzwTz7kX7nzzzzzzzzzzzzzzzzzzw"
-MaxUpgrade2 := "|<>*146$47.D07U0001z0Tk000371lU00067z3zzzzw7w7zzzzs7kDzzzzk7UTzSzzUC0w0MwD081k0UkS00301U1w82663U3sMAAC7UDkssMwD0zVvkksQ0z3zVU0k0y7z3U1UUwDy7U33VszyDX6Dbzzzzzzzzzzzzzzzy"
-MaxUpgrade3 := "|<>*91$49.Dk7s00004M3600006633000031X1U0001UP0nzr3kkD0PzynAM3UD06D3A0U70331a00301U1X20VVUs1lVUklsS1kkssMwD0kMSQAC70AA/u603036413U1UUn20Vs0ksNX0My4NqMTUDnzzlwU"
+UnitExistence :=
+    "|<>*91$66.btzzzzzzyDzXlzzzzzzyDzXlzzzzzzyDzXlzzzyzzyDbXlUS0UM3UC1XlUA0UE30A1XlW4EXl34AMXlX0sbXXC80XVX4MbXX6A1U3UA0bk30ARk7UC0bk3UA1sDUz8bw3kC1zzbyszzzzzzzzbw1zzzzzzzzby3zzzzzzzzzzjzzzzzzU"
+MaxUpgrade :=
+    "|<>*134$53.0000000007U3k00000TUDk00001XUsk000033XVU0000636300800A3M6TzwS0M3UDrjRa0k70S0AS61U40s0EMAD001U0k0Ty41331k1zwA6673k7zsQAAS7UTzkwsMQC0TzVzkk0M0Tz3zVk0kETy7z3k1VkzwTz7kX7nzzzzzzzzzzzzzzzzzzw"
+MaxUpgrade2 :=
+    "|<>*146$47.D07U0001z0Tk000371lU00067z3zzzzw7w7zzzzs7kDzzzzk7UTzSzzUC0w0MwD081k0UkS00301U1w82663U3sMAAC7UDkssMwD0zVvkksQ0z3zVU0k0y7z3U1UUwDy7U33VszyDX6Dbzzzzzzzzzzzzzzzy"
+MaxUpgrade3 :=
+    "|<>*91$49.Dk7s00004M3600006633000031X1U0001UP0nzr3kkD0PzynAM3UD06D3A0U70331a00301U1X20VVUs1lVUklsS1kkssMwD0kMSQAC70AA/u603036413U1UUn20Vs0ksNX0My4NqMTUDnzzlwU"
 VoteStart := "|<>*95$38.ryzzzzlz7zlzwDVzwTzXszz7zsSC30Q7770E40klU410C8sklVXUACAM0w7X360T1s1kEbsz0Q40zDsTVUM"
-LobbyText := "|<>*134$56.0000000000k00U10000T00y1w000Cs0RkvU003606AAM000lU1X36000AMzMwlswS36zyDwTzjslw7WD4ST6AS0M1k33lX7060A0MMPlkkVX366DwQS8sFkk3z772C4QC1zlkkV327UTw40M0k1wDz1UC0Q0z3zsQ7WD4TkzzzzzzzzwTzzzzzzzy7zzzzzzzzXzzzzzzzzszs"
+LobbyText :=
+    "|<>*134$56.0000000000k00U10000T00y1w000Cs0RkvU003606AAM000lU1X36000AMzMwlswS36zyDwTzjslw7WD4ST6AS0M1k33lX7060A0MMPlkkVX366DwQS8sFkk3z772C4QC1zlkkV327UTw40M0k1wDz1UC0Q0z3zsQ7WD4TkzzzzzzzzwTzzzzzzzy7zzzzzzzzXzzzzzzzzszs"
 AreasText := "|<>*108$36.zs007zyzztzzwTzzzzwTzTzzsA4613tA421/k4M0F3k4M4FXXUQ603bmy713zzzzzzU"
-MatchmakeUI := "|<>*129$83.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzUzzzzzzzzzzzzz0zzzzzzzw7zzzw1zzzzzzzkDzzzs3zzzzzzzUTzzzs7zzzzzzz0zzzzkTzzzzzzy1zzzzzzzzzzzzw3zzzzzzzzzzzzs7zzzzzzzzzzzzkDy0Tw7UsDzzzzUTk0Ds7007zzzz0z00DUA007zzzy1w00D0M007zzzw3k00S0k00Dzzzs7U00Q1U00DzzzkC0S0s3060TzzzUQ1y0k60y0zzzz0s7w1UA1y1zzzy1kDs30M3w3zzzw3UTk60k7s7zy7k70TUA1UDkDzs70C0Q0s30TUTzk00S001k60z0zzU01w007UA1y1zz007w00D0M3w3zz00Dw00y0k7s7zz01zw03y1kDkDzzU7zy0Tw7UzkTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs"
-CaptchaExistence := "|<>*100$131.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwDzzzzzzzs3zzzzzzzzzzzkDzzzzzzz01zzzzzzy7zzzUTzzzzzzs00zzzzzzs7zzz0zzzzzzzU01zzzzzzkDzzy1zzzzzzy003zzzzzzUTzzw3zzzzzzs007zzzzzz0zzzs7zzzzzzk7wTzzzzzy1zyTkDzzzzzz0Tzz0UsEDk0DU7UEDz0Uzy1zzw01U0DU0S0300Dw01zw3zzk0300C00s0600Dk03zsDzz00600C01U0A00T007zkTzw00A00A0200M00Q00DzUzzs30M3US1w1lk70s30Tz0zzkD0kDUw3s7zUT1kD0zy1zzUz1UT1s7kTz0y3Uz1zw1zz1w30y3kDUzy1w31w3zw1zC1s61s7UT0zw3s61s7zs0sA00A00D0y0Es7kA00Dzs00A00M00y0C00kDUQ00Tzs00M00k01y0A01UT0s00zzs00s01U07w0Q030y3s01zzs03s0300zw1w0C1w7s03zzw0TwCC1rzy3y1y7wDwCDzzzzzzzw3zzzzzzzzzzzzzzzzzzzzs7zzzzzzzzzzzzzzzzzzzzkDzzzzzzzzzzzzzzzzzzzzUTzzzzzzzzzzzzzzzzzzzz0zzzzzzzzzzzzzzzzzzzzy3zzzzzzzzzzzzzzzzzzzzy7zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzU"
-Matchmaking := "|<>*93$73.zzzzzzzzzzzzzzlzzzsszzzzk08zzzwATzzzs04Tzzy6Dzzzw03zzzz3zzzzy7zzzzzVzzzzz3zX4DwElW7w8U7lU3s0Mk1w0E1sk0w0AM0Q080wM0A06A06040SAC6736737W7z6D37VX3VXl3zX7VVklXkkkVzlXkk0MlsM0EzslsQ0AMwC08zwMwC06AS7U4TyATDlb6DbxXzzzzzzzzzzzlzzzzzzzzzzs0zzzzzzzzzzw0zzzzzzzzzzy0zzzzzzzzzzzty"
+MatchmakeUI :=
+    "|<>*129$83.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzUzzzzzzzzzzzzz0zzzzzzzw7zzzw1zzzzzzzkDzzzs3zzzzzzzUTzzzs7zzzzzzz0zzzzkTzzzzzzy1zzzzzzzzzzzzw3zzzzzzzzzzzzs7zzzzzzzzzzzzkDy0Tw7UsDzzzzUTk0Ds7007zzzz0z00DUA007zzzy1w00D0M007zzzw3k00S0k00Dzzzs7U00Q1U00DzzzkC0S0s3060TzzzUQ1y0k60y0zzzz0s7w1UA1y1zzzy1kDs30M3w3zzzw3UTk60k7s7zy7k70TUA1UDkDzs70C0Q0s30TUTzk00S001k60z0zzU01w007UA1y1zz007w00D0M3w3zz00Dw00y0k7s7zz01zw03y1kDkDzzU7zy0Tw7UzkTzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs"
+CaptchaExistence :=
+    "|<>*100$131.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwDzzzzzzzs3zzzzzzzzzzzkDzzzzzzz01zzzzzzy7zzzUTzzzzzzs00zzzzzzs7zzz0zzzzzzzU01zzzzzzkDzzy1zzzzzzy003zzzzzzUTzzw3zzzzzzs007zzzzzz0zzzs7zzzzzzk7wTzzzzzy1zyTkDzzzzzz0Tzz0UsEDk0DU7UEDz0Uzy1zzw01U0DU0S0300Dw01zw3zzk0300C00s0600Dk03zsDzz00600C01U0A00T007zkTzw00A00A0200M00Q00DzUzzs30M3US1w1lk70s30Tz0zzkD0kDUw3s7zUT1kD0zy1zzUz1UT1s7kTz0y3Uz1zw1zz1w30y3kDUzy1w31w3zw1zC1s61s7UT0zw3s61s7zs0sA00A00D0y0Es7kA00Dzs00A00M00y0C00kDUQ00Tzs00M00k01y0A01UT0s00zzs00s01U07w0Q030y3s01zzs03s0300zw1w0C1w7s03zzw0TwCC1rzy3y1y7wDwCDzzzzzzzw3zzzzzzzzzzzzzzzzzzzzs7zzzzzzzzzzzzzzzzzzzzkDzzzzzzzzzzzzzzzzzzzzUTzzzzzzzzzzzzzzzzzzzz0zzzzzzzzzzzzzzzzzzzzy3zzzzzzzzzzzzzzzzzzzzy7zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzU"
+Matchmaking :=
+    "|<>*93$73.zzzzzzzzzzzzzzlzzzsszzzzk08zzzwATzzzs04Tzzy6Dzzzw03zzzz3zzzzy7zzzzzVzzzzz3zX4DwElW7w8U7lU3s0Mk1w0E1sk0w0AM0Q080wM0A06A06040SAC6736737W7z6D37VX3VXl3zX7VVklXkkkVzlXkk0MlsM0EzslsQ0AMwC08zwMwC06AS7U4TyATDlb6DbxXzzzzzzzzzzzlzzzzzzzzzzs0zzzzzzzzzzw0zzzzzzzzzzy0zzzzzzzzzzzty"
 AutoAbility := "|<>*83$21.zzzzzzzwD4S0kXl28wS03Xk0QSH7nWMy0n7sCQzzzzU"
-ClaimText := "|<>*127$71.00000000000000A7s01y000007zTs07w00000Tzlk0AQ00003k7VU0MM0000D03300kk0000Q0667zXzsw01k0AAzzzzzy031ysTrjTSyS0C7zky0AA0EQ0QCTVs0MM00Q0ss73U0kk00M1lkC711VVUUk3VnwC73333VU73zsQS666737y3tksQAAAC7zy01Uk0MMMQDzy030k0kkksTzy061U1VVVkzzz0y3kX77XXzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-LoadingScreen := "|<>*98$87.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwTzzzzzzzzzzzzX3zszzzzzszXzzsMTz7zzzzz7wDzz3XzszzzzzszVzzsTzz7zzzzz7wDkz3bwMz3szbszXs1sQS07U73sT7wS07XXU0w0QT7s03UkQQMA7b3Vkz00QD3XX3kzwCCDs03XwQQMz7s1llz7wQTXXX7sw0C4TszXXwQQMz73VsXz7wQD3XX3kswD0TszXk0wQQ0731w7z7wT0DXXU0s0DUzszXw3wQT17UFyDzzzzzzzzzzzzzlzzzzzzzzzzzzzgTw"
-P := "|<>*88$35.3zzzy0Tzzzy0zzzzy3zzzzw7zzzzsTzzzzszzzzzlzzzzzXzw1zz7zs1zyDzk1zwTzV3zszz73zlzyC7zXzwQTz7zs0zyDzk3zwTzVzzszz7zzlzyDzzXzwTzz7zzzzyDzzzzwTzzzzszzzzzkzzzzzVzzzzy1zzzzw3zzzzk3zzzz00zzzs0000000000004"
-P2 := "|<>*102$165.1zzzs000Dzzz0003zzzk000zzzw0zzzzk007zzzy001zzzzU00TzzzsDzzzz001zzzzs00Tzzzy007zzzzXzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzrzzzzy00zzzzzk0Dzzzzw03zzzzzzzzzzk07zw3zy01zzzzzU0Tzzzzzzzzzy00zy07zk0Dzzzzw03zlyDzzzzzzk07zU0Ty01zzzzzU0Ts30Tzzzzzy00zs01zk0Dzzzzw03y001zzz0zzk07y0k7y01zzzzzU0TU007zzvzzy00zU60Tk0Dzzzzw03w000zzzTzzk07w003y01zzzzTU0TU007zzvzzy00z000Dk0Dzzzzw03w000zzzzzzk07s0k1y01zzzzzU0TU007zzzzzy00z060Dk0Dzzzzw03y001zzzzzzk07s0k1y01zzzzzU0Tk00Dzzzzzy00z060Dk0Dzzzzw03z003zzzzzzk07s0k1y01zzzzzU0Tw00zzzzzzy00zU60Tk0Dzzzzw03zk0Dzzzzzzk07w0k3y01zzzzzU0Tz03zzzzzzy00zk60zk0Dzzzzw03zw0zzzzzzzk07z00Dy01zzzzzU0TzkDzzzzzzy00zw03zk0Dzzzzw03zzbzzzzzzzk07zk0zy01zzzzzU0Tzzzzzzzzzy00zzkzzk0Dzzzzw03zzzzzzzzzzk07zzzzy01zzzzzU0Tzzzzvzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzlzzzzs00Dzzzz003zzzzk00zzzzw7zzzy000zzzzk00Dzzzw003zzzz0Dzzz0001zzzs000Tzzy0007zzzUU"
-Priority := "|<>*92$70.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs0000000000T00000000000s00000000001U0000000000600000000000M007zs000001U01zwU07U0060060200m000M00E1DvuA001U017zysss0060043W110U00M00E68442001U010MXkss006004TWD1X000M00Fu8x2C001U0168XUQ8006006En/1kU00M00D1zbxy001U0000870U00600000000000M00000000001k0000000000DU0000000001zzzzzzzzzzzzU"
+ClaimText :=
+    "|<>*127$71.00000000000000A7s01y000007zTs07w00000Tzlk0AQ00003k7VU0MM0000D03300kk0000Q0667zXzsw01k0AAzzzzzy031ysTrjTSyS0C7zky0AA0EQ0QCTVs0MM00Q0ss73U0kk00M1lkC711VVUUk3VnwC73333VU73zsQS666737y3tksQAAAC7zy01Uk0MMMQDzy030k0kkksTzy061U1VVVkzzz0y3kX77XXzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+LoadingScreen :=
+    "|<>*98$87.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwTzzzzzzzzzzzzX3zszzzzzszXzzsMTz7zzzzz7wDzz3XzszzzzzszVzzsTzz7zzzzz7wDkz3bwMz3szbszXs1sQS07U73sT7wS07XXU0w0QT7s03UkQQMA7b3Vkz00QD3XX3kzwCCDs03XwQQMz7s1llz7wQTXXX7sw0C4TszXXwQQMz73VsXz7wQD3XX3kswD0TszXk0wQQ0731w7z7wT0DXXU0s0DUzszXw3wQT17UFyDzzzzzzzzzzzzzlzzzzzzzzzzzzzgTw"
+P :=
+    "|<>*88$35.3zzzy0Tzzzy0zzzzy3zzzzw7zzzzsTzzzzszzzzzlzzzzzXzw1zz7zs1zyDzk1zwTzV3zszz73zlzyC7zXzwQTz7zs0zyDzk3zwTzVzzszz7zzlzyDzzXzwTzz7zzzzyDzzzzwTzzzzszzzzzkzzzzzVzzzzy1zzzzw3zzzzk3zzzz00zzzs0000000000004"
+P2 :=
+    "|<>*102$165.1zzzs000Dzzz0003zzzk000zzzw0zzzzk007zzzy001zzzzU00TzzzsDzzzz001zzzzs00Tzzzy007zzzzXzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzrzzzzy00zzzzzk0Dzzzzw03zzzzzzzzzzk07zw3zy01zzzzzU0Tzzzzzzzzzy00zy07zk0Dzzzzw03zlyDzzzzzzk07zU0Ty01zzzzzU0Ts30Tzzzzzy00zs01zk0Dzzzzw03y001zzz0zzk07y0k7y01zzzzzU0TU007zzvzzy00zU60Tk0Dzzzzw03w000zzzTzzk07w003y01zzzzTU0TU007zzvzzy00z000Dk0Dzzzzw03w000zzzzzzk07s0k1y01zzzzzU0TU007zzzzzy00z060Dk0Dzzzzw03y001zzzzzzk07s0k1y01zzzzzU0Tk00Dzzzzzy00z060Dk0Dzzzzw03z003zzzzzzk07s0k1y01zzzzzU0Tw00zzzzzzy00zU60Tk0Dzzzzw03zk0Dzzzzzzk07w0k3y01zzzzzU0Tz03zzzzzzy00zk60zk0Dzzzzw03zw0zzzzzzzk07z00Dy01zzzzzU0TzkDzzzzzzy00zw03zk0Dzzzzw03zzbzzzzzzzk07zk0zy01zzzzzU0Tzzzzzzzzzy00zzkzzk0Dzzzzw03zzzzzzzzzzk07zzzzy01zzzzzU0Tzzzzvzzzzw00TzzzzU07zzzzs01zzzzyTzzzzU03zzzzw00zzzzz00Dzzzzlzzzzs00Dzzzz003zzzzk00zzzzw7zzzy000zzzzk00Dzzzw003zzzz0Dzzz0001zzzs000Tzzy0007zzzUU"
+Priority :=
+    "|<>*92$70.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs0000000000T00000000000s00000000001U0000000000600000000000M007zs000001U01zwU07U0060060200m000M00E1DvuA001U017zysss0060043W110U00M00E68442001U010MXkss006004TWD1X000M00Fu8x2C001U0168XUQ8006006En/1kU00M00D1zbxy001U0000870U00600000000000M00000000001k0000000000DU0000000001zzzzzzzzzzzzU"
 
 CheckForUpdates()
 
+Run("https://discord.gg/ANUFU8mVas")
+
+AddToLog("LIVE LAUGH LOVE PANTHEON MACRO")
 
 global cardPickerEnabled := 1
 global hasReconnect := 0
@@ -76,7 +92,8 @@ InitializeMacro() {
         Sleep 100
     }
     else {
-        MsgBox("You must have ROBLOX open in order to start the macro (microsoft roblox doesnt work)", "Error T4", "+0x1000",)
+        MsgBox("You must have ROBLOX open in order to start the macro (microsoft roblox doesnt work)", "Error T4",
+            "+0x1000",)
         return
     }
 
@@ -95,7 +112,8 @@ SetDefaultKeyboard(localeID) {
     Lan := DllCall("LoadKeyboardLayout", "Str", Format("{:08x}", LocaleID), "Int", 0)
     binaryLocaleID := Buffer(4, 0)
     NumPut("UInt", LocaleID, binaryLocaleID)
-    DllCall("SystemParametersInfo", "UInt", SPI_SETDEFAULTINPUTLANG, "UInt", 0, "Ptr", binaryLocaleID, "UInt", SPIF_SENDWININICHANGE)
+    DllCall("SystemParametersInfo", "UInt", SPI_SETDEFAULTINPUTLANG, "UInt", 0, "Ptr", binaryLocaleID, "UInt",
+        SPIF_SENDWININICHANGE)
     for hwnd in WinGetList()
         PostMessage 0x50, 0, Lan, , hwnd
 }
@@ -124,7 +142,6 @@ GoToRaids() {
             BetterClick(406, 497)
             Sleep 3000
         }
-
 
         ; go to xmas map
 
@@ -188,15 +205,13 @@ IsPlacementSuccessful() {
         BetterClick(329, 184) ; close upg menu
         return true
     }
-    else if (ok := FindText(&X, &Y, 88 - 150000, 416 - 150000, 88 + 150000, 416 + 150000, 0, 0, Priority))
-    {
+    else if (ok := FindText(&X, &Y, 88 - 150000, 416 - 150000, 88 + 150000, 416 + 150000, 0, 0, Priority)) {
         AddToLog("placed unit successfully by priority")
         BetterClick(329, 184) ; close upg menu
         return true
     }
     return false
 }
-
 
 Numpad5:: {
     SendWebhook()
@@ -277,7 +292,8 @@ SpiralPlacement(gridPlacement := false) {
                     }
 
                     if (gridPlacement) {
-                        PlaceInGrid(currentX, currentY, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
+                        PlaceInGrid(currentX, currentY, slotNum, &placementCount, &successfulCoordinates, &
+                            savedPlacements, &placements)
                     }
 
                 }
@@ -287,7 +303,8 @@ SpiralPlacement(gridPlacement := false) {
                     BetterClick(373, 237)
                 }
                 if (cardPickerEnabled = 1) {
-                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0,
+                        pick_card)) { ; CARD PICKER
                         cardSelector()
                     }
                 }
@@ -305,7 +322,8 @@ SpiralPlacement(gridPlacement := false) {
                 currentX += Random(-15, 15)
                 currentY += Random(-15, 15)
 
-                if isInsideRect(rect1, currentX, currentY) or isInsideRect(rect2, currentX, currentY) or isInsideRect(rect3, currentX, currentY) {
+                if isInsideRect(rect1, currentX, currentY) or isInsideRect(rect2, currentX, currentY) or isInsideRect(
+                    rect3, currentX, currentY) {
                     steps := 30
                     currentX := centerX
                     currentY := centerY
@@ -389,7 +407,8 @@ LinePlacement() {
                     BetterClick(373, 237)
                 }
                 if (cardPickerEnabled = 1) {
-                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0,
+                        pick_card)) { ; CARD PICKER
                         cardSelector()
                         ;AddToLog("Succesfully picked card")
                     }
@@ -478,9 +497,10 @@ LinePlacementGrid() {
                             break
                         }
 
-                        PlaceInGrid(x, y2, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
+                        PlaceInGrid(x, y2, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &
+                            placements)
                     }
-                    
+
                 }
 
                 if (alternatingPlacement == 1) {
@@ -500,8 +520,9 @@ LinePlacementGrid() {
                             break
                         }
 
-                        PlaceInGrid(x, y2, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements)
-                        
+                        PlaceInGrid(x, y2, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &
+                            placements)
+
                     }
                 }
                 if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
@@ -509,7 +530,8 @@ LinePlacementGrid() {
                     BetterClick(373, 237)
                 }
                 if (cardPickerEnabled = 1) {
-                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                    if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0,
+                        pick_card)) { ; CARD PICKER
                         cardSelector()
                         ;AddToLog("Succesfully picked card")
                     }
@@ -555,9 +577,9 @@ ZigZagPlacement(gridPlacement := false) {
     savedPlacements := Map()
 
     startY2 := 200, endY2 := 500
-    startY := 170, endY :=470
+    startY := 170, endY := 470
 
-    rectZigZag := { x: startX, y: startY, width: 500 , height: 500 }
+    rectZigZag := { x: startX, y: startY, width: 500, height: 500 }
 
     ; += Random(0, 15)
 
@@ -598,7 +620,7 @@ ZigZagPlacement(gridPlacement := false) {
                 } catch {
                     savedPlacements.Set("slot_" slotNum, 1)
                 }
-                
+
                 if placementCount >= placements {
                     break
                 }
@@ -614,7 +636,8 @@ ZigZagPlacement(gridPlacement := false) {
                 BetterClick(373, 237)
             }
             if (cardPickerEnabled = 1) {
-                if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0,
+                    pick_card)) { ; CARD PICKER
                     cardSelector()
                     ;AddToLog("Succesfully picked card")
                 }
@@ -626,13 +649,13 @@ ZigZagPlacement(gridPlacement := false) {
                 return LobbyLoop()
             }
             Reconnect()
-            
+
             ; Move to the next X-coordinate
             x += step
             AddToLog("x: " x ", y: " y)
 
-             ; If X exceeds the end range, reset it and move down
-             if (isInsideRect(rectZigZag, x, y)) {
+            ; If X exceeds the end range, reset it and move down
+            if (isInsideRect(rectZigZag, x, y)) {
                 ; Alternate y between y1 and y2 for zig-zag effect
                 y := (y = y1) ? y2 : y1
             } else {
@@ -640,7 +663,7 @@ ZigZagPlacement(gridPlacement := false) {
                 ; Incase y value goes out of bounds, re-initialize starting locations, and add a huge offset to x
                 if (y >= endY) {
                     AddToLog("Reached end of Y-range or coordinates are outside rectangles. Moving to the next row.")
-                    x := startX + Random(20,40) ; Reset x to the starting position, add random offset to it incase 2 players are using same placement style
+                    x := startX + Random(20, 40) ; Reset x to the starting position, add random offset to it incase 2 players are using same placement style
                     startY := 170
                     startY2 := 200
                     y1 := startY
@@ -648,7 +671,7 @@ ZigZagPlacement(gridPlacement := false) {
                     y := y1
                 } else { ; If y isin't OOB
                     AddToLog("Reached end of X-range or coordinates are outside rectangles. Moving to the next row.")
-                    x := startX + Random(0,15) ; Reset x to the starting position, add random offset to it incase 2 players are using same placement style
+                    x := startX + Random(0, 15) ; Reset x to the starting position, add random offset to it incase 2 players are using same placement style
                     y1 := startY + step ; Move top Y-coordinate down
                     y2 := startY2 + step ; Move bottom Y-coordinate down
                     startY := y1 ; This is needed incase you loop again. Otherwise you will keep starting at the default startY/startY2 locations
@@ -657,8 +680,7 @@ ZigZagPlacement(gridPlacement := false) {
                 }
 
             }
-            
-            
+
         } ; End While
         AddToLog("Completed " placementCount " placements for Slot " slotNum ".")
         Reconnect()
@@ -670,65 +692,65 @@ ZigZagPlacement(gridPlacement := false) {
 ; Algorithm that's used in LinePlacement. Is a helper function. Attempts to place units in a 2x2 grid once an initial unit has been placed.
 ; Can be combined withother placement algos.
 ; by @Durrenth
-PlaceInGrid(startX, startY, slotNum, & placementCount, & successfulCoordinates, & savedPlacements, & placements) {
+PlaceInGrid(startX, startY, slotNum, &placementCount, &successfulCoordinates, &savedPlacements, &placements) {
     ; Places untis in a 2x2 grid, starting from the top left where the initial unit is placed (as dictated by startX and startY)
     ; U x
-    ; x x 
-       ;"Y"     ;"X"   
+    ; x x
+    ;"Y"     ;"X"
     ;[number1,number2]
 
     gridOffsets := [
-       [30, 0],  ; Row 1, Column 0
-       [0, 30],  ; Row 0, Column 1
-       [30, 30]   ; Row 1, Column 1
-   ]
-   for index, offset in gridOffsets {
+        [30, 0],  ; Row 1, Column 0
+        [0, 30],  ; Row 0, Column 1
+        [30, 30]   ; Row 1, Column 1
+    ]
+    for index, offset in gridOffsets {
 
-       ; Adds the value that's stored in the array at the current index to either x or y's starting location 
-       gridX := startX + offset[2] ; Move horizontally by 'step' from the initial start location
-       gridY := startY + offset[1] ; Move vertically by 'step' from the initial start location
+        ; Adds the value that's stored in the array at the current index to either x or y's starting location
+        gridX := startX + offset[2] ; Move horizontally by 'step' from the initial start location
+        gridY := startY + offset[1] ; Move vertically by 'step' from the initial start location
 
-       if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
+        if (ok := FindText(&X, &Y, 334, 182, 450, 445, 0, 0, AutoAbility)) ; USE ABILITY IF OFF
         {
             BetterClick(373, 237)
         }
-       ; Handle card picker and related logic during grid placement
-       if (cardPickerEnabled = 1) {
-           if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
-               cardSelector()
-               AddToLog("Successfully picked card")
-           }
-       }
-       BetterClick(348, 391) ; next
-       BetterClick(565, 563) ; move mouse
-       if ShouldStopUpgrading(1) {
-           AddToLog("Stopping due to finding lobby condition.")
-           return LobbyLoop()
-       }
-       Reconnect()
+        ; Handle card picker and related logic during grid placement
+        if (cardPickerEnabled = 1) {
+            if (ok := FindText(&cardX, &cardY, 391 - 150000, 249 - 150000, 391 + 150000, 249 + 150000, 0, 0, pick_card)) { ; CARD PICKER
+                cardSelector()
+                AddToLog("Successfully picked card")
+            }
+        }
+        BetterClick(348, 391) ; next
+        BetterClick(565, 563) ; move mouse
+        if ShouldStopUpgrading(1) {
+            AddToLog("Stopping due to finding lobby condition.")
+            return LobbyLoop()
+        }
+        Reconnect()
 
-       if PlaceUnit(gridX, gridY, slotNum) {
-           placementCount++ ; Increment the placement count
-           successfulCoordinates.Push({ x: gridX, y: gridY, slot: "slot_" slotNum }) ; Track the placement
-           AddToLog("Placed unit at (" gridX ", " gridY ") in 3x3 grid.")
+        if PlaceUnit(gridX, gridY, slotNum) {
+            placementCount++ ; Increment the placement count
+            successfulCoordinates.Push({ x: gridX, y: gridY, slot: "slot_" slotNum }) ; Track the placement
+            AddToLog("Placed unit at (" gridX ", " gridY ") in 3x3 grid.")
 
-           ; Update or initialize saved placements for the current slot
-           try {
-               if savedPlacements.Get("slot_" slotNum) {
-                   savedPlacements.Set("slot_" slotNum, savedPlacements.Get("slot_" slotNum) + 1)
-               }
-           } catch {
-               savedPlacements.Set("slot_" slotNum, 1)
-           }
+            ; Update or initialize saved placements for the current slot
+            try {
+                if savedPlacements.Get("slot_" slotNum) {
+                    savedPlacements.Set("slot_" slotNum, savedPlacements.Get("slot_" slotNum) + 1)
+                }
+            } catch {
+                savedPlacements.Set("slot_" slotNum, 1)
+            }
 
-           ; Check if placement limit is reached
-           if placementCount >= placements {
-               break
-           }
+            ; Check if placement limit is reached
+            if placementCount >= placements {
+                break
+            }
 
-       }
+        }
 
-   } ; End for
+    } ; End for
 
 }
 
@@ -737,7 +759,7 @@ TryPlacingUnits() {
     switch PlacementDropdown.Text {
         case "Spiral":
             SpiralPlacement()
-        case "Lines": 
+        case "Lines":
             LinePlacement()
         case "Lines + 2x2 Grid Finder":
             LinePlacementGrid()
@@ -828,8 +850,7 @@ UpgradeUnits() {
 
         return LobbyLoop()
     }
-    else
-    {
+    else {
         global successfulCoordinates
         global maxedCoordinates
 
@@ -916,7 +937,6 @@ SortByPriority(&array, priorityMapping) {
     AddToLog("Finished sorting units, starting upgrading")
 }
 
-
 /*UpgradeUnits() {
     global successfulCoordinates
     global maxedCoordinates
@@ -980,7 +1000,6 @@ SortByPriority(&array, priorityMapping) {
     }
 }*/
 
-
 UpgradeUnit(x, y) {
     BetterClick(x, y - 3)
     BetterClick(264, 363) ; upgrade
@@ -990,8 +1009,8 @@ UpgradeUnit(x, y) {
 
 IsMaxUpgrade() {
     Sleep 500
-    if (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade) or (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade2)) or (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade3)))
-    {
+    if (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade) or (ok := FindText(&X, &Y, 142, 346, 406, 472, 0,
+        0, MaxUpgrade2)) or (ok := FindText(&X, &Y, 142, 346, 406, 472, 0, 0, MaxUpgrade3))) {
         return true
     }
 }
@@ -1024,7 +1043,6 @@ FindAndClickColor(targetColor := 0x006783, searchArea := [0, 0, A_ScreenWidth, A
     }
 }
 
-
 OnSpawn() {
     if ControlGetVisible(keybindsGui) {
         return
@@ -1054,8 +1072,7 @@ LoadedLoop() {
     AddToLog("Waiting to load in")
     loop {
         Sleep 1000
-        if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))
-        {
+        if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart)) {
             global StageStartTime := A_TickCount
             AddToLog("Loaded in")
             if (hasReconnect == 1 && DisconnectCheckbox.Value == 1) {
@@ -1082,10 +1099,10 @@ LoadedLoop() {
             BetterClick(590, 15) ; click on P
             break
         }*/
-        else if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P))
-        {
+        else if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P)) {
             Sleep 10000
-            if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P) and (ok != FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))) {
+            if (ok := FindText(&X, &Y, 629 - 150000, 67 - 150000, 629 + 150000, 67 + 150000, 0, 0, P) and (ok !=
+                FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))) {
                 global StageStartTime := A_TickCount
                 AddToLog("Loaded in late")
                 if (hasReconnect == 1 && DisconnectCheckbox.Value == 1) {
@@ -1114,8 +1131,7 @@ LoadedLoop() {
 StartedLoop() {
     loop {
         Sleep 1000
-        if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart))
-        {
+        if (ok := FindText(&X, &Y, 326, 60, 547, 173, 0, 0, VoteStart)) {
             continue
         }
         AddToLog("Game started")
@@ -1126,8 +1142,7 @@ StartedLoop() {
 LobbyLoop() {
     loop {
         Sleep 1000
-        if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText))
-        {
+        if (ok := FindText(&X, &Y, 746, 476, 862, 569, 0, 0, AreasText)) {
             break
         }
         Reconnect()
@@ -1137,8 +1152,7 @@ LobbyLoop() {
 }
 
 CheckForLobbyButton() {
-    if (ok := FindText(&X, &Y, 273, 103, 482, 214, 0, 0, LobbyText))
-    {
+    if (ok := FindText(&X, &Y, 273, 103, 482, 214, 0, 0, LobbyText)) {
         return true
     }
 }
@@ -1258,15 +1272,13 @@ AntiCaptcha() {
     }
 
     Sleep 1500
-    if (ok := FindText(&X, &Y, 221, 206, 403, 355, 0, 0, MatchmakeUI))
-    {
+    if (ok := FindText(&X, &Y, 221, 206, 403, 355, 0, 0, MatchmakeUI)) {
         AddToLog("Waiting for captcha cooldown then retrying")
         Sleep 6000
     }
     Reconnect()
     return
 }
-
 
 TapToMove(toggle) {
 

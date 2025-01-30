@@ -4,11 +4,11 @@
 
 global repoOwner := "keirahela"
 global repoName := "taxi-macro-selfhost"
-global currentVersion := "v1.1.6-8"
+global currentVersion := "v1.1.6-9"
 
 CheckForUpdates() {
     url := "https://api.github.com/repos/" repoOwner "/" repoName "/releases/latest"
-    http := ComObject("MSXML2.XMLHTTP")
+    http := ComObject("WinHttp.WinHttpRequest.5.1")
     http.Open("GET", url, false)
     http.Send()
 
@@ -31,7 +31,6 @@ CheckForUpdates() {
         AddToLog("You are using the latest version.")
     }
 }
-
 
 DownloadAndUpdateRepo() {
     if (IsProcessElevated(DllCall("GetCurrentProcessId")) != 1) {
@@ -70,19 +69,16 @@ ExtractZIP(zipFilePath, targetDir) {
     RunWait("tar -xf " "" zipFilePath "" " -C " "" targetDir "" "", "", "Hide")
 }
 
-CopyFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite := false)
-{
+CopyFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite := false) {
     ErrorCount := 0
     try
         FileCopy SourcePattern, DestinationFolder, DoOverwrite
     catch as Err
         ErrorCount := Err.Extra
-    Loop Files, SourcePattern, "D"
-    {
+    loop files, SourcePattern, "D" {
         try
             DirCopy A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
-        catch
-        {
+        catch {
             ErrorCount += 1
         }
     }
