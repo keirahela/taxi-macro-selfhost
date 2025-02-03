@@ -55,6 +55,8 @@ Run("https://discord.gg/ANUFU8mVas")
 
 AddToLog("LIVE LAUGH LOVE PANTHEON MACRO")
 
+global matchModeEnabled := 1
+global backToLobbyEnabled := 1
 global cardPickerEnabled := 1
 global hasReconnect := 0
 
@@ -157,10 +159,14 @@ GoToRaids() {
 
         ;sacred planet act 4
         Sleep 1200
-        BetterClick(469, 340) ; play
-        Sleep 2000
-
-        AntiCaptcha()
+        if (matchModeEnabled) {
+            BetterClick(469, 340) ; play (matchmaking mode)
+            Sleep 2000
+            AntiCaptcha()
+        } else {
+            BetterClick(380, 340) ; play (non-matchmaking mode)
+            Sleep 2000
+        }
     }
     LoadedLoop()
     StartedLoop()
@@ -1023,7 +1029,18 @@ ShouldStopUpgrading(sleepamount := 300) {
             Sleep 100
             SendWebhook()
         }
-        BetterClick(376, 117)
+        if (backToLobbyEnabled) {
+            BetterClick(376, 117) ; Back to Lobby
+        } else {
+            BetterClick(540, 117) ; Replay
+            sleep 2000
+
+            LoadedLoop()
+            StartedLoop()
+            OnSpawnSetup()
+            TryPlacingUnits()
+
+        }
         return true
     }
 }
@@ -1183,7 +1200,7 @@ TPtoSpawn() {
         SendInput("{WheelDown 1}") ; scroll
     }
     Sleep 600
-    BetterClick(523, 271) ; tp to spawn
+    BetterClick(523, 320) ; tp to spawn
     Sleep 600
     BetterClick(582, 150) ; exit settings
 

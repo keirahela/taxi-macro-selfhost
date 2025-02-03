@@ -120,6 +120,20 @@ MainGUI.Add("Picture", "x820 y-20 w90 h90 +BackgroundTrans cffffff", TaxiImage)
 MainGUI.AddProgress("c0x7e4141 x8 y27 h602 w800", 100) ; box behind roblox, credits to yuh for this idea
 WinSetTransColor("0x7e4141 255", MainGUI)
 
+; Matchmaking Checkbox
+MatchMode := MainGUI.Add("Checkbox", "x590 y640 w105 cffffff Checked", "Matchmaking")
+changeMatchMode() {
+    global matchModeEnabled := MatchMode.Value
+}
+MatchMode.OnEvent('Click', (*) => changeMatchMode())
+
+; LobbyOrReplay Checkbox
+LobbyReplay := MainGUI.Add("Checkbox", "x360 y640 w105 cffffff Checked", "Back To Lobby")
+changeLobbyReplay() {
+    global backToLobbyEnabled := LobbyReplay.Value
+}
+LobbyReplay.OnEvent('Click', (*) => changeLobbyReplay())
+
 MainGUI.Add("GroupBox", "x830 y60 w238 h250 cfffd90 ", "Unit Setup")
 enabled1 := MainGUI.Add("Checkbox", "x840 y80 cffffff", "Slot 1")
 enabled2 := MainGUI.Add("Checkbox", "x840 y110 cffffff", "Slot 2")
@@ -157,7 +171,7 @@ KeyBinds := MainGUI.Add("Text", "x830 y560 w238 h300 r7 cffffff +BackgroundTrans
 
 MainGUI.SetFont("s16 bold", "Segoe UI")
 
-MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter Event Macro v1.1.6-9 - Taxi Macro")
+MainGUI.Add("Text", "x12 y632 w800 cWhite +BackgroundTrans", "Winter v1.1.6-10 - keirahela")
 
 MainGUI.Show("x27 y15 w1100 h665")
 
